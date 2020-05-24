@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "GDB",
+            "type": "gdb",
+            "request": "launch",
+            "cwd": "${workspaceRoot}",
+            "target": "${workspaceRoot}/build/firmware.elf",
+            "gdbpath" : "xtensa-esp32-elf-gdb",
+            "autorun": [
+                "symbol-file ${workspaceRoot}/build/firmwareOD.elf",
+                "target remote localhost:3333",
+                "mon reset halt",
+                "flushregs",
+                "thb app_main",
+                "c"
+            ]
+        }
+    ]
+}

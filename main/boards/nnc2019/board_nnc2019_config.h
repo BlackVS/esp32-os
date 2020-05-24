@@ -1,24 +1,20 @@
 #pragma once
 
-#define FIRMWARE_VERSION "0.1"
+#include <driver/rmt.h>
 
-#define CONFIG_JTAG_ENABLED 1
+namespace NNC2019 {
+    namespace config{
+        //LEDS Strip
+        constexpr uint32_t      LEDS_NUM=10;
+        constexpr gpio_num_t    LEDS_PIN=GPIO_NUM_4;
+        constexpr rmt_channel_t LEDS_RMT_CHANNEL=RMT_CHANNEL_0;
 
+        //blue led on badge
+        constexpr gpio_num_t PIN_LED_BLUE=GPIO_NUM_5;
 
+    }
+}
 
-
-//Choose only one of!!!
-//#define BADGE_ASTEROIDS
-//#define BADGE_CORONA
-//#define BADGE_LEDS1
-#define BADGE_LEDS2
-
-
-#define NUM_LEDS 10
-
-//blue led on badge
-#define PIN_LED_BLUE GPIO_NUM_5
-//#define GPIO_OUTPUT_PIN_SEL (1ULL << PIN_LED_BLUE)
 
 //CAN
 #define PIN_CAN_RX GPIO_NUM_21
@@ -38,7 +34,6 @@
 // PIN 12 == T5
 
 //leds
-#define PIN_WS2812 GPIO_NUM_4
 
 #define BLINK_GPIO GPIO_NUM_2
 
@@ -62,3 +57,4 @@
 #define TOUCHPAD_FILTER_MODE
 #define TOUCHPAD_FILTER_TOUCH_PERIOD (10)
 #define TOUCHPAD_TRESH 600
+

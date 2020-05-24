@@ -4,7 +4,7 @@ void angle2b(float a, int* i0, int* b0, int *i1, int *b1){
       int iangle = ((int)a+360)%360;
 
       int iled0 = iangle/36;
-      int iled1 = (iled0 + 1) % NUM_LEDS;
+      int iled1 = (iled0 + 1) % leds.num();
 
       int r = iangle % 36;
       int bled0 = (35-r) * 4;
@@ -24,7 +24,7 @@ void leds_compass_task(void *pvParameters) {
       //printf("%7.3f %7.3f %7.3f --- ", data.accTotal[0], data.accTotal[1], data.accTotal[2] );
       //printf("%7.3f %7.3f %7.3f\n", data.gyro[0], data.gyro[1], data.gyro[2] );
       //printf("\n");
-      leds_clear();
+      leds.clear();
 
       //float x = data.accTotal[0];
       //float y = data.accTotal[1];
@@ -44,11 +44,11 @@ void leds_compass_task(void *pvParameters) {
       //leds_add_color_rgb(i1, 0, b1, 0);
 
       angle2b(-data.yaw, &i0, &b0, &i1, &b1);
-      leds_add_color_rgb(i0, 0, 0, b0);
-      leds_add_color_rgb(i1, 0, 0, b1);
+      leds.add_color_rgb(i0, 0, 0, b0);
+      leds.add_color_rgb(i1, 0, 0, b1);
 
       //printf("%i %i\n",iangle, iled0);
-      leds_update();
+      leds.update();
     }
     vTaskDelay(10);
   }

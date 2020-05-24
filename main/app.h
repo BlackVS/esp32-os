@@ -44,7 +44,12 @@ extern "C" {
 
 #include "sdkconfig.h"
 
-#include "board_config.h"
+//general toolkits
+#include "I2Cbus.hpp"
+#include "lcdgfx.h"
+
+//boards
+#include "boards.h"
 
 
 #include "utils.h"
@@ -52,15 +57,16 @@ extern "C" {
 #include "vfs.h"
 #include "console.h"
 #include "wifi.h"
-#include "ws2812_control.h"
+#include "led_strip.h"
 
 //tasks
 #include "btn.h"
 #include "leds.h"
 #include "leds_compass.h"
 #include "mpu_task.h"
-#include "display.h"
 
 #include "resources.h"
+
+#include "oled.h"
 
     

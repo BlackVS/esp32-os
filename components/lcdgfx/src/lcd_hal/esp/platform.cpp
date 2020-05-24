@@ -127,17 +127,16 @@ void lcd_eepromWriteWord(const void *ptr, uint16_t val)
     // TODO: Not implemented
 }
 
-int lcd_random(int max)
+int lcd_random(int v)
 {
-    // TODO: Not implemented
-    return 0;
+    return rand() % v;
 }
 
 int lcd_random(int min, int max)
 {
-    // TODO: Not implemented
-    return 0;
+    return rand() % (max - min + 1) + min;
 }
+
 
 #endif
 

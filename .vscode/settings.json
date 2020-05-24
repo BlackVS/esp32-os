@@ -1,0 +1,27 @@
+{
+    "files.associations": {
+        "ssd1306_interface.h": "c",
+        "*.ipp": "cpp",
+        "*.tcc": "cpp",
+        "unordered_map": "cpp",
+        "fstream": "cpp",
+        "istream": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "numeric": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "cstring": "cpp",
+        "iosfwd": "cpp",
+        "string_view": "cpp",
+        "unordered_set": "cpp",
+        "system_error": "cpp",
+        "*.inc": "cpp",
+        "array": "cpp",
+        "algorithm": "cpp",
+        "random": "cpp",
+        "memory_resource": "cpp"
+    }
+}

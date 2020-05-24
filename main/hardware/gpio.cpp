@@ -1,35 +1,5 @@
 #include "app.h"
 
-void led_gpio_init() {
-   static bool fInited=false;
-   if(!fInited)
-   {
-    gpio_config_t io_conf;
-    // disable interrupt
-    io_conf.intr_type = GPIO_INTR_DISABLE;
-    // set as output mode
-    io_conf.mode = GPIO_MODE_OUTPUT;
-    // bit mask of the pins that you want to set,e.g.GPIO18/19
-    io_conf.pin_bit_mask = (1ULL << PIN_LED_BLUE);
-    // disable pull-down mode
-    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-    // disable pull-up mode
-    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-    // configure GPIO with the given settings
-    gpio_config(&io_conf);
-    fInited=true;
-   }
-}
-
-void blink_gpio_init()
-{
-	/* Init LED */
-	gpio_pad_select_gpio(BLINK_GPIO);
-	/* Set the GPIO as a push/pull output */
-	gpio_set_direction(BLINK_GPIO, GPIO_MODE_INPUT_OUTPUT);
-    //i2c should be already inited
-}
-
 void i2c_gpio_init(void)
 {
     // Initialize I2C on port 0 using I2Cbus interface
@@ -53,7 +23,7 @@ void i2c_gpio_init(void)
 
 void gpio_init(void)
 {
+    #ifdef BOARD_BADGE_NNC2019
     i2c_gpio_init(); 
-    led_gpio_init();
-    blink_gpio_init();
+    #endif
 }

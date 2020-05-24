@@ -1,84 +1,6 @@
 #include "app.h"
 
-
-static struct led_state LEDS;
-static struct led_state LEDS_out;
-static uint32_t leds_brightness=100;
-
-int randrange(int mn, int mx){
-  return (rand() % (mx - mn + 1)) + mn; 
-}
-
-void leds_task_init(void) 
-{
-  ws2812_control_init();
-  leds_clear();
-  leds_update();
-  srand(time(NULL));
-}
-
-void leds_set_brightness(uint32_t br)
-{
-  leds_brightness=br;
-}
-
-void leds_clear(void) 
-{
-  for (int i = 0; i < NUM_LEDS; i++) 
-    leds_set_color_raw(i, 0);
-}
-
-void leds_set_color_raw(uint32_t index, uint32_t color) 
-{
-  if(index<NUM_LEDS)
-    LEDS.leds[index] = color;
-}
-
-uint32_t leds_get_color_raw(uint32_t index) 
-{
-  if(index<NUM_LEDS)
-    return LEDS.leds[index];
-  return 0;
-}
-
-void leds_set_color_rgb(uint32_t index, uint32_t r, uint32_t g, uint32_t b) 
-{
-  if(index<NUM_LEDS)
-  {
-    r=MIN(255, r);
-    g=MIN(255, g);
-    b=MIN(255, b);
-    LEDS.leds[index] = LED_RGB(r,g,b);
-  }
-}
-
-void leds_add_color_rgb(uint32_t index, uint32_t ra, uint32_t ga, uint32_t ba) 
-{
-  if(index<NUM_LEDS)
-  {
-    uint32_t r, g, b, c;
-    c=leds_get_color_raw(index);
-    r=R(c)+ra;
-    g=G(c)+ga;
-    b=B(c)+ba;
-    leds_set_color_rgb(index,r,g,b);
-  }
-}
-
-void leds_update() 
-{ 
-  uint32_t bmax=leds_brightness;
-  uint32_t r, g, b;
-  for(int i=0; i<NUM_LEDS; i++)
-  {
-      uint32_t c = LEDS.leds[i];
-      r=(R(c)*bmax)/255;
-      g=(G(c)*bmax)/255;
-      b=(B(c)*bmax)/255;
-      LEDS_out.leds[i]=LED_RGB(r,g,b);
-  }
-  ws2812_write_leds(LEDS_out); 
-}
+#define randrange(a,b) lcd_random(a,b) 
 
 typedef struct {
   uint32_t r1, g1, b1, pos1, dir1;
@@ -97,49 +19,51 @@ void leds_effect0_rand(EFFECT0_DATA& data){
   data.dir2 = rand()> (RAND_MAX/2) ? 1 : -1;
 }
 
-void leds_effect0_init(EFFECT0_DATA& data, uint32_t clr1=LED_BLUE, uint32_t clr2=LED_YELLOW)
+void leds_effect0_init(EFFECT0_DATA& data, uint32_t clr1=LEDS_STRIP_BLUE, uint32_t clr2=LEDS_STRIP_YELLOW)
 {
-  data.b1=B(clr1);
-  data.g1=G(clr1);
-  data.r1=R(clr1);
+  data.b1=LEDS_STRIP_B(clr1);
+  data.g1=LEDS_STRIP_G(clr1);
+  data.r1=LEDS_STRIP_R(clr1);
   data.dir1 = rand()> (RAND_MAX/2) ? 1 : -1;
-  data.b2=B(clr2);
-  data.g2=G(clr2);
-  data.r2=R(clr2);
+  data.b2=LEDS_STRIP_B(clr2);
+  data.g2=LEDS_STRIP_G(clr2);
+  data.r2=LEDS_STRIP_R(clr2);
   data.dir2 = rand()> (RAND_MAX/2) ? 1 : -1;
   data.pos1=0;
-  data.pos2=NUM_LEDS/2;
+  data.pos2=leds.num()/2;
   data.f_dim=0.4f;
 }
 
 
 void leds_effect0_dim(float f)
 {
-  for(int i=0; i<NUM_LEDS; i++){
-    uint32_t c=leds_get_color_raw(i);
-    uint32_t r=(uint32_t)(R(c)*f);
-    uint32_t g=(uint32_t)(G(c)*f);
-    uint32_t b=(uint32_t)(B(c)*f);
-    leds_set_color_rgb(i,r,g,b);
+  for(int i=0; i<leds.num(); i++){
+    uint32_t c=leds.get_color_raw(i);
+    uint32_t r=(uint32_t)(LEDS_STRIP_R(c)*f);
+    uint32_t g=(uint32_t)(LEDS_STRIP_G(c)*f);
+    uint32_t b=(uint32_t)(LEDS_STRIP_B(c)*f);
+    leds.set_color_rgb(i,r,g,b);
   }
 }
 
 void leds_effect0_draw(EFFECT0_DATA& data)
 {
-  leds_clear();
+  leds.clear();
   uint32_t r,g,b,c,p;
   uint32_t rc,gc,bc;
   rc = data.r1;
   gc = data.g1;
   bc = data.b1;
   p=data.pos1;
-  for(int i=0;i<NUM_LEDS;i++,p=(p-data.dir1+NUM_LEDS)%NUM_LEDS)
+  uint32_t num_leds=leds.num();
+
+  for(int i=0;i<num_leds;i++,p=(p-data.dir1+num_leds)%num_leds)
   {
-    c=leds_get_color_raw(p);
-    r=R(c)+rc;
-    g=G(c)+gc;
-    b=B(c)+bc;
-    leds_set_color_rgb(p,r,g,b);
+    c=leds.get_color_raw(p);
+    r=LEDS_STRIP_R(c)+rc;
+    g=LEDS_STRIP_G(c)+gc;
+    b=LEDS_STRIP_B(c)+bc;
+    leds.set_color_rgb(p,r,g,b);
     rc=(uint32_t)(rc*data.f_dim);
     gc=(uint32_t)(gc*data.f_dim);
     bc=(uint32_t)(bc*data.f_dim);
@@ -148,13 +72,13 @@ void leds_effect0_draw(EFFECT0_DATA& data)
   gc = data.g2;
   bc = data.b2;
   p=data.pos2;
-  for(int i=0;i<NUM_LEDS;i++,p=(p-data.dir2+NUM_LEDS)%NUM_LEDS)
+  for(int i=0;i<num_leds;i++,p=(p-data.dir2+num_leds)%num_leds)
   {
-    c=leds_get_color_raw(p);
-    r=R(c)+rc;
-    g=G(c)+gc;
-    b=B(c)+bc;
-    leds_set_color_rgb(p,r,g,b);
+    c=leds.get_color_raw(p);
+    r=LEDS_STRIP_R(c)+rc;
+    g=LEDS_STRIP_G(c)+gc;
+    b=LEDS_STRIP_B(c)+bc;
+    leds.set_color_rgb(p,r,g,b);
     rc=(uint32_t)(rc*data.f_dim);
     gc=(uint32_t)(gc*data.f_dim);
     bc=(uint32_t)(bc*data.f_dim);
@@ -163,11 +87,12 @@ void leds_effect0_draw(EFFECT0_DATA& data)
 
 void leds_effect0_iter(EFFECT0_DATA& data)
 {
-  data.pos1=(data.pos1+data.dir1+NUM_LEDS)%NUM_LEDS;
-  data.pos2=(data.pos2+data.dir2+NUM_LEDS)%NUM_LEDS;
+  uint32_t num_leds=leds.num();
+  data.pos1=(data.pos1+data.dir1+num_leds)%num_leds;
+  data.pos2=(data.pos2+data.dir2+num_leds)%num_leds;
 }
 
-void leds_task(void *pvParameters) {
+ void leds_task(void *pvParameters) {
   EFFECT0_DATA effect_data;
   leds_effect0_init(effect_data);
   float f=1.0f;
@@ -186,8 +111,8 @@ void leds_task(void *pvParameters) {
     if(f>0.95f){
       f=1.0f;
     }
-    leds_update();
+    leds.update();
     vTaskDelay(10);
   }
-  vTaskDelete(NULL); 
-}
+   vTaskDelete(NULL); 
+ }
