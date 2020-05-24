@@ -1,5 +1,6 @@
 #include "app.h"
 
+#include "board_nnc2019.h"
 #define randrange(a,b) lcd_random(a,b) 
 
 typedef struct {
@@ -92,7 +93,8 @@ void leds_effect0_iter(EFFECT0_DATA& data)
   data.pos2=(data.pos2+data.dir2+num_leds)%num_leds;
 }
 
- void leds_task(void *pvParameters) {
+ void leds_task(void *pvParameters) 
+ {
   EFFECT0_DATA effect_data;
   leds_effect0_init(effect_data);
   float f=1.0f;
@@ -100,7 +102,7 @@ void leds_effect0_iter(EFFECT0_DATA& data)
     leds_effect0_draw(effect_data);
     leds_effect0_iter(effect_data);
     leds_effect0_dim(f);
-    if (touchpad_get_state()==TOUCHPAD_STATE_ON)
+    if (touchpad.get_state()==TOUCHPAD_STATE_ON)
       f=f*0.8f;
     else
       f=f*1.2f;

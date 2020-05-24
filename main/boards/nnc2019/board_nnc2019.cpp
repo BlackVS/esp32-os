@@ -8,6 +8,12 @@ Board_NNC2019 board=Board_NNC2019();
 DISPLAY_TYPE display(-1, i2c0, OLED_I2C_ADDR );
 CBlink       blue_led(NNC2019::config::PIN_LED_BLUE);
 CLEDStrip    leds(NNC2019::config::LEDS_NUM, NNC2019::config::LEDS_RMT_CHANNEL, NNC2019::config::LEDS_PIN );
+#ifndef NNC2019_JTAG_ENABLED
+CTouchButton touchpad(NNC2019::config::PIN_TOUCH);
+#else
+CTouchButtonDummy touchpad;
+#endif
+
 //Variant 1
 //Problem - MPU and OLED on the same I2C interface and both try to install driver - as result error message
 //DisplaySSD1306_128x64_I2C display(-1, {I2C_NUM_0, OLED_I2C_ADDR, OLED_I2C_SCL_IO, OLED_I2C_SDA_IO, OLED_I2C_FREQ_HZ} ); // {busId, addr, scl, sda, freq}
@@ -29,7 +35,7 @@ void self_test_task(void *pvParameters)
 
     while (1) 
     {
-        if (touchpad_get_state()==TOUCHPAD_STATE_OFF)
+        if (touchpad.get_state()==TOUCHPAD_STATE_OFF)
         {
             vTaskDelay(delay2); //must do task delay to not block threads
             continue;
@@ -53,11 +59,18 @@ Board_NNC2019::Board_NNC2019()
     //delay(100); for breakpoints only
 }
 
+
 void Board_NNC2019::init() 
 {
-    //Blue LED
+    // Initialize I2C on port 0 using I2Cbus interface
+    i2c0.setup(MPU_I2C_SDA_IO, MPU_I2C_SCL_IO, MPU_I2C_FREQ_HZ);
+    i2c0.begin();
+    //
+    WiFi.init();
+    mpu_task_init();  //i2c init moved to gpio_init
     blue_led.init();
     leds.init();
+    touchpad.init();
 
     //Display init
     ESP_LOGD(__FUNCTION__, "Starting...");
@@ -79,6 +92,36 @@ void Board_NNC2019::init()
 
 void Board_NNC2019::run() 
 {
+  ESP_LOGD(TAG, "%s", __FUNCTION__);
   //Main blue LED" hearbeat on touchpad pressed
   xTaskCreate(&self_test_task, "SelfTest", 1024 * 2, NULL, 5, NULL);
+  touchpad.run();
+
+  //MPU: reads sensora
+  xTaskCreate(&mpu_task , "MPU" , 4096, NULL, 5, &mpu_task_handle);
+
+  #ifdef BADGE_LEDS1
+  xTaskCreate(&leds_task, "LEDs n ROLL", 1024 * 4, NULL, 5, NULL);
+  xTaskCreate(&oled_heart_sprite_oop_task, "OLED Heart sprite OOP", 4*1024, NULL, 5, NULL);
+  #endif
+
+  //Compass+Snow
+  #ifdef BADGE_LEDS2
+  xTaskCreate(&leds_compass_task, "LEDs compass", 1024 * 4, NULL, 5, NULL);
+  xTaskCreate(&oled_snow_task, "OLED Snow", 4*1024, NULL, 5, NULL);
+  #endif
+  
+  //Space ship - Asteroids
+  #ifdef BADGE_ASTEROIDS
+  xTaskCreate(&leds_task, "LEDs n ROLL", 1024 * 4, NULL, 5, NULL);
+  xTaskCreate(&oled_ship_task, "OLED Ship", 4*1024, NULL, 5, NULL);
+  #endif 
+
+  #ifdef BADGE_CORONA
+  //Corona game
+  xTaskCreate(&leds_alarm_task, "LEDS Alarm", 1024 * 4, NULL, 5, NULL);
+  xTaskCreate(&oled_corona_fighter_task, "CORONA Fighter", 4*1024, NULL, 5, NULL);
+  #endif
+
+
 }

@@ -1,6 +1,10 @@
 #pragma once
 
 #include <driver/rmt.h>
+#include <driver/touch_pad.h>
+
+
+//#define NNC2019_JTAG_ENABLED 1
 
 namespace NNC2019 {
     namespace config{
@@ -10,7 +14,10 @@ namespace NNC2019 {
         constexpr rmt_channel_t LEDS_RMT_CHANNEL=RMT_CHANNEL_0;
 
         //blue led on badge
-        constexpr gpio_num_t PIN_LED_BLUE=GPIO_NUM_5;
+        constexpr gpio_num_t    PIN_LED_BLUE=GPIO_NUM_5; 
+
+        //touchpad
+        constexpr touch_pad_t   PIN_TOUCH=TOUCH_PAD_NUM5;  /*!< Touch pad channel 5 is GPIO12*/
 
     }
 }
@@ -50,11 +57,5 @@ namespace NNC2019 {
 
 //#define MPU_INT_IO GPIO_NUM_27		// MPU Interrupt pin GPIO number
 
-//touch pad
-#define PIN_TOUCH TOUCH_PAD_NUM5
-#define TOUCHPAD_NO_CHANGE (-1)
-#define TOUCHPAD_THRESH_NO_USE (0)
-#define TOUCHPAD_FILTER_MODE
-#define TOUCHPAD_FILTER_TOUCH_PERIOD (10)
-#define TOUCHPAD_TRESH 600
+
 

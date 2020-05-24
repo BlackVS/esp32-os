@@ -48,25 +48,29 @@ extern "C" {
 #include "I2Cbus.hpp"
 #include "lcdgfx.h"
 
+//hardware
+#include "vfs.h"
+#include "mpu_task.h"
+#include "touch_button.h"
+#include "led_strip.h"
+#include "nvs_settings.h"
+#include "wifi.h"
+
+//resource
+#include "resources.h"
+
 //boards
 #include "boards.h"
 
 
+//
 #include "utils.h"
-#include "nvs_settings.h"
-#include "vfs.h"
-#include "console.h"
-#include "wifi.h"
-#include "led_strip.h"
+
 
 //tasks
-#include "btn.h"
 #include "leds.h"
 #include "leds_compass.h"
-#include "mpu_task.h"
-
-#include "resources.h"
-
+#include "console.h"
 #include "oled.h"
 
     
