@@ -29,7 +29,6 @@
 #define _LCD_COMMON_V2_H_
 
 #include "lcd_hal/io.h"
-#include "lcd_common.inl"
 
 #ifdef __cplusplus
 extern "C" {

@@ -2,6 +2,8 @@
 
 #define CONFIG_STORE_HISTORY 1
 
+//#define SPI_DEBUG 1
+
 //#define MAX(x, y) (((x) > (y)) ? (x) : (y))
 //#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
@@ -46,6 +48,20 @@ extern "C" {
 
 //general toolkits
 #include "I2Cbus.hpp"
+#include "esp32_tft.h"
+
+// TO-DO: add suppurt for shited/random pixels at the borders
+
+// #define ST7735_INITB
+// #define ST7735_INITB
+// #define ST7735_GREENTAB
+// #define ST7735_GREENTAB2
+// #define ST7735_GREENTAB3
+// #define ST7735_GREENTAB128    // For 128 x 128 display
+// #define ST7735_GREENTAB160x80 // For 160 x 80 display (BGR, inverted, 26 offset)
+// #define ST7735_REDTAB
+// #define ST7735_BLACKTAB
+// #define ST7735_REDTAB160x8
 #include "lcdgfx.h"
 
 //hardware

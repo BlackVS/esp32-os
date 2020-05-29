@@ -24,14 +24,10 @@
 
 #include "../io.h"
 
-#if defined(__XTENSA__) && !defined(ARDUINO)
-
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
 #include <map>
-
-#if 1
 
 typedef struct
 {
@@ -87,28 +83,36 @@ void lcd_delay(unsigned long ms)
 int  lcd_adcRead(int pin)
 {
     // TODO: Not implemented
+    assert(0);
     return 0;
 }
 
 uint32_t lcd_micros(void)
 {
     // TODO: Not implemented
+    assert(0);
     return 0;
 }
 
 void lcd_delayUs(unsigned long us)
 {
     // TODO: Not implemented
+    assert(0);
+
 }
 
 void lcd_randomSeed(int seed)
 {
     // TODO: Not implemented
+    assert(0);
+
 }
 
 void attachInterrupt(int pin, void (*interrupt)(), int level)
 {
     // TODO: Not implemented
+    assert(0);
+
 }
 
 uint8_t lcd_pgmReadByte(const void *ptr)
@@ -119,12 +123,15 @@ uint8_t lcd_pgmReadByte(const void *ptr)
 uint16_t lcd_eepromReadWord(const void *ptr)
 {
     // TODO: Not implemented
+    assert(0);
+
     return 0;
 }
 
 void lcd_eepromWriteWord(const void *ptr, uint16_t val)
 {
     // TODO: Not implemented
+    assert(0);
 }
 
 int lcd_random(int v)
@@ -137,7 +144,3 @@ int lcd_random(int min, int max)
     return rand() % (max - min + 1) + min;
 }
 
-
-#endif
-
-#endif

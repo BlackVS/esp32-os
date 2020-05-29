@@ -22,6 +22,10 @@
         "array": "cpp",
         "algorithm": "cpp",
         "random": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "initializer_list": "cpp",
+        "memory": "cpp",
+        "bitset": "cpp",
+        "cstdlib": "cpp"
     }
 }

@@ -26,11 +26,7 @@
  * @file lcd_hal/esp/esp32_i2c.h This is ESP32 I2C implementation
  */
 
-#ifndef _SSD1306V2_ESP_ESP32_I2C_H_
-#define _SSD1306V2_ESP_ESP32_I2C_H_
-
-#if defined(CONFIG_ESP32_I2C_AVAILABLE) && defined(CONFIG_ESP32_I2C_ENABLE)
-
+#pragma once
 #include "driver/i2c.h"
 
 /**
@@ -107,8 +103,3 @@ private:
     uint32_t m_frequency;
     i2c_cmd_handle_t m_cmd_handle;
 };
-
-#endif
-
-#endif
-

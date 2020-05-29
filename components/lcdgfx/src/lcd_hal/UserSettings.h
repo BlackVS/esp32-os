@@ -82,18 +82,6 @@
  */
 #define CONFIG_PLATFORM_SPI_ENABLE
 
-/** Define this macro if you need to enable Linux I2C module for compilation */
-#define CONFIG_LINUX_I2C_ENABLE
-
-/** Define this macro if you need to enable Linux SPI module for compilation */
-#define CONFIG_LINUX_SPI_ENABLE
-
-/** Define this macro if you need to enable Arduino Wire module for compilation */
-#define CONFIG_ARDUINO_I2C_ENABLE
-
-/** Define this macro if you need to enable Arduino SPI module for compilation */
-#define CONFIG_ARDUINO_SPI_ENABLE
-
 /** Define this macro if you need to enable ESP32 I2C module for compilation */
 #define CONFIG_ESP32_I2C_ENABLE
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef BOARD_BADGE_NNC2019
+
 #include "board_nnc2019_config.h"
 #include "blink.h"
 
@@ -40,3 +42,6 @@ class CTouchButtonDummy
 };
 extern CTouchButtonDummy  touchpad;
 #endif
+
+
+#endif //board

@@ -130,6 +130,12 @@ typedef struct
      * This is required for ESP32 platform only.
      */
     int8_t sda; // mosi
+
+    /**
+     * Optional - spi data MISO number. -1 if not used.
+     * This is required for ESP32 platform only.
+     */
+    int8_t miso;
 } SPlatformSpiConfig;
 
 /** Describes low level hardware API for C-style code */

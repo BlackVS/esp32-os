@@ -1,10 +1,11 @@
 #pragma once
 
+#ifdef BOARD_BADGE_NNC2019
+
 #include <driver/rmt.h>
 #include <driver/touch_pad.h>
 
-
-//#define NNC2019_JTAG_ENABLED 1
+#define NNC2019_JTAG_ENABLED 1
 
 namespace NNC2019 {
     namespace config{
@@ -57,5 +58,4 @@ namespace NNC2019 {
 
 //#define MPU_INT_IO GPIO_NUM_27		// MPU Interrupt pin GPIO number
 
-
-
+#endif

@@ -1,5 +1,7 @@
 #include "app.h"
 
+#ifdef BOARD_BADGE_NNC2019
+
 static const char *TAG = __FILE__;
 Board_NNC2019 board=Board_NNC2019();
 //////////////////////////////////////////////////////////////////////////
@@ -14,15 +16,7 @@ CTouchButton touchpad(NNC2019::config::PIN_TOUCH);
 CTouchButtonDummy touchpad;
 #endif
 
-//Variant 1
-//Problem - MPU and OLED on the same I2C interface and both try to install driver - as result error message
-//DisplaySSD1306_128x64_I2C display(-1, {I2C_NUM_0, OLED_I2C_ADDR, OLED_I2C_SCL_IO, OLED_I2C_SDA_IO, OLED_I2C_FREQ_HZ} ); // {busId, addr, scl, sda, freq}
-//DisplayST7735_80x160x16_SPI display(18, {-1, 5, 23, 0, 13, 15});
-//DisplayST7735_128x160x16_SPI display(18, {-1, 5, 23, 0, 13, 15});
-//DisplaySSD1306_128x64_SPI display(-1,{-1, 0, 1, 0, -1, -1); // Use this line for nano pi (RST not used, 0=CE, gpio1=D/C)
-//DisplaySSD1306_128x64_SPI display(3,{-1, 4, 5, 0,-1,-1});   // Use this line for Atmega328p (3=RST, 4=CE, 5=D/C)
-//DisplaySSD1306_128x64_SPI display(24,{-1, 0, 23, 0,-1,-1}); // Use this line for Raspberry  (gpio24=RST, 0=CE, gpio23=D/C)
-//DisplaySSD1306_128x64_SPI display(22,{-1, 5, 21, 0,-1,-1}); // Use this line for ESP32 (VSPI)  (gpio22=RST, gpio5=CE for VSPI, gpio21=D/C)
+
 
 
 void self_test_task(void *pvParameters) 
@@ -125,3 +119,5 @@ void Board_NNC2019::run()
 
 
 }
+
+#endif

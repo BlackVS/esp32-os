@@ -1,6 +1,9 @@
 #include "app.h"
 
 
+#ifdef BOARD_BADGE_NNC2019
+
+
 #define TAG "OLED Ship"
 
 #define GAME_X1 0
@@ -417,3 +420,4 @@ void oled_corona_fighter_task(void *pvParameters)
   vTaskDelete(NULL); 
 }
 
+#endif

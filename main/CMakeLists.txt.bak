@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.5)
 #idf_component_register(SRCS 
 set(COMPONENT_SRCS  app.cpp 
                     console/*
-		    console.cpp 
                     cmd_version.cpp 
                     cmd_join.cpp 
                     cmd_npm.cpp 

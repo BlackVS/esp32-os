@@ -1,5 +1,7 @@
 #include "app.h"
 
+#ifdef BOARD_BADGE_NNC2019
+
 void angle2b(float a, int* i0, int* b0, int *i1, int *b1){
       int iangle = ((int)a+360)%360;
 
@@ -54,3 +56,6 @@ void leds_compass_task(void *pvParameters) {
   }
   vTaskDelete(NULL); 
 }
+
+
+#endif

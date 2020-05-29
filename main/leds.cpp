@@ -1,5 +1,7 @@
 #include "app.h"
 
+#ifdef BOARD_BADGE_NNC2019
+
 #include "board_nnc2019.h"
 #define randrange(a,b) lcd_random(a,b) 
 
@@ -118,3 +120,7 @@ void leds_effect0_iter(EFFECT0_DATA& data)
   }
    vTaskDelete(NULL); 
  }
+
+
+
+#endif

@@ -172,51 +172,10 @@ void DisplaySSD1306<I>::end()
 {
 }
 
-static const PROGMEM uint8_t s_SSD1306_lcd128x32_initData[] =
-{
-#ifdef SDL_EMULATION
-    SDL_LCD_SSD1306, 0x00,
-    0x00, 0x00,
-#endif
-    0xAE, 0x00,          // display off
-    0xD5, 0x01, 0x80,    // Clock div
-    0xA8, 0x01, 31,      // Set multiplex
-    0xD3, 0x01, 0x00,    // --no offset
-    0x40, 0x00,          // Set display offset
-    0x8D, 0x01, 0x14,    // Set charge pump
-    0xA0| 0x01, 0x00,    // Reverse mapping
-    0xC8, 0x00,          // Decrement
-    0xDA, 0x01, 0x02,    // Set com pins
-    0x81, 0x01, 0x7F,    // contast value
-    0xD9, 0x01, 0x22,    // 0x1F Precharge
-    0xDB, 0x01, 0x40,    // Precharge
-    0x20, 0x01, 0x00,    // Set horizontal addressing mode
-    0xA4, 0x00,          // Display resume
-    0xA6, 0x00,          // Normal display
-    0xAF, 0x00,          // Display on
-};
-
 ////////////////////////////////////////////////////////////////////////////////
 //             SSD1306 basic 1-bit implementation
 ////////////////////////////////////////////////////////////////////////////////
 
-template <class I>
-void DisplaySSD1306_128x32<I>::begin()
-{
-    ssd1306_resetController2( this->m_rstPin, 10 );
-    this->m_w = 128;
-    this->m_h = 32;
-    // Give LCD some time to initialize. Refer to SSD1306 datasheet
-    lcd_delay(0);
-    _configureSpiDisplayCmdModeOnly<I>(this->m_intf,
-                            s_SSD1306_lcd128x32_initData,
-                            sizeof(s_SSD1306_lcd128x32_initData));
-}
-
-template <class I>
-void DisplaySSD1306_128x32<I>::end()
-{
-}
 
 static const PROGMEM uint8_t s_SSD1306_lcd128x64_initData[] =
 {
@@ -242,9 +201,65 @@ static const PROGMEM uint8_t s_SSD1306_lcd128x64_initData[] =
     0xAF, 0x00,          // Display on
 };
 
+
+#define CMD_DELAY 0xff
 ////////////////////////////////////////////////////////////////////////////////
 //             SSD1306 basic 1-bit implementation
 ////////////////////////////////////////////////////////////////////////////////
+template<class I>
+void _configureSpiDisplayCmdModeOnly(I& intf, const uint8_t *config, uint8_t configSize)
+{
+    uint8_t command = 1;
+    int8_t args;
+    intf.commandStart();
+    for( uint8_t i=0; i<configSize; i++)
+    {
+        uint8_t data = pgm_read_byte(&config[i]);
+        if ( command )
+        {
+            if ( command == CMD_DELAY )
+            {
+                command = 1;
+                lcd_delay( data == 0xFF ? 500: data );
+            }
+            else
+            {
+                intf.send(data);
+                command = 0;
+                args = -1;
+            }
+        }
+        else
+        {
+            if (args < 0)
+            {
+                if ( data >= 128 )
+                {
+                    command = data;
+                }
+                else if ( data > 0 )
+                {
+                    args = data;
+                }
+                else
+                {
+                    command = 1;
+                }
+            }
+            else
+            {
+                args--;
+                intf.send(data);
+                if ( !args )
+                {
+                    command = 1;
+                }
+            }
+        }
+    }
+    intf.stop();
+}
+
 
 template <class I>
 void DisplaySSD1306_128x64<I>::begin()

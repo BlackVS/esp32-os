@@ -1,5 +1,7 @@
 #include "app.h"
 
+#ifdef BOARD_BADGE_NNC2019
+
 #define TAG "OLED Snow"
 
 /*
@@ -220,3 +222,5 @@ void oled_snow_task(void *pvParameters)
   }
   vTaskDelete(NULL); 
 }
+
+#endif

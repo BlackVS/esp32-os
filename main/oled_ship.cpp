@@ -1,5 +1,7 @@
 #include "app.h"
 
+#ifdef BOARD_BADGE_NNC2019
+
 
 #define TAG "OLED Ship"
 
@@ -195,3 +197,6 @@ void oled_ship_task(void *pvParameters)
   vTaskDelete(NULL); 
 }
 
+
+
+#endif

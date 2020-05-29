@@ -6,6 +6,8 @@ set(COMPONENT_SRCDIRS .
                     console
                     boards
                     boards/nnc2019
+                    boards/m5stickc
+                    boards/TTGO
                     resources
                     )
 set(COMPONENT_ADD_INCLUDEDIRS .
@@ -13,6 +15,8 @@ set(COMPONENT_ADD_INCLUDEDIRS .
                     console
                     boards
                     boards/nnc2019
+                    boards/m5stick
+                    boards/TTGO
                     resources
                     )
 

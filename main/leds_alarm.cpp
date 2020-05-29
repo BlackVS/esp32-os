@@ -1,5 +1,7 @@
 #include "app.h"
 
+#ifdef BOARD_BADGE_NNC2019
+
 #define LEDS_ALARM_REPEAT 20
 static bool leds_alarm_state =false;
 static bool leds_alarm_repeat=true;
@@ -71,3 +73,6 @@ void leds_alarm_set(bool v, uint32_t color, float fDim, uint32_t value, bool bRe
   leds_alarm_repeat=bRepeat;
   leds_alarm_state=v;
 }
+
+
+#endif
