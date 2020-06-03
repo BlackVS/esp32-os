@@ -44,14 +44,13 @@
 /**
  * NanoDisplayOps1 is template class for 1-bit operations.
  */
-template <class I>
-class NanoDisplayOps1: public NanoDisplayBase<I>
+class NanoDisplayOps1: public NanoDisplayBase
 {
 public:
     /** number of bits per single pixel in buffer */
     static const uint8_t BITS_PER_PIXEL = 1;
 
-    using NanoDisplayBase<I>::NanoDisplayBase;
+    using NanoDisplayBase::NanoDisplayBase;
 
     /**
      * Draws pixel on specified position
@@ -299,13 +298,13 @@ protected:
  * NanoDisplayOps4 is template class for 4-bit monochrome operations.
  */
 template <class I>
-class NanoDisplayOps4: public NanoDisplayBase<I>
+class NanoDisplayOps4: public NanoDisplayBase
 {
 public:
     /** number of bits per single pixel in buffer */
     static const uint8_t BITS_PER_PIXEL = 4;
 
-    using NanoDisplayBase<I>::NanoDisplayBase;
+    using NanoDisplayBase::NanoDisplayBase;
 
     /**
      * Draws pixel on specified position
@@ -515,14 +514,13 @@ protected:
 /**
  * NanoDisplayOps8 is template class for 8-bit operations.
  */
-template <class I>
-class NanoDisplayOps8: public NanoDisplayBase<I>
+class NanoDisplayOps8: public NanoDisplayBase
 {
 public:
     /** number of bits per single pixel in buffer */
     static const uint8_t BITS_PER_PIXEL = 8;
 
-    using NanoDisplayBase<I>::NanoDisplayBase;
+    using NanoDisplayBase::NanoDisplayBase;
 
     /**
      * Draws pixel on specified position
@@ -732,14 +730,13 @@ protected:
 /**
  * NanoDisplayOps16 is template class for 16-bit operations.
  */
-template <class I>
-class NanoDisplayOps16: public NanoDisplayBase<I>
+class NanoDisplayOps16: public NanoDisplayBase
 {
 public:
     /** number of bits per single pixel in buffer */
-    static const uint8_t BITS_PER_PIXEL = 1;
+    static const uint8_t BITS_PER_PIXEL = 16;
 
-    using NanoDisplayBase<I>::NanoDisplayBase;
+    using NanoDisplayBase::NanoDisplayBase;
 
     /**
      * Draws pixel on specified position
@@ -950,7 +947,7 @@ protected:
  * NanoCanvasOps provides operations for drawing in memory buffer.
  * Depending on BPP argument, this class can work with 1,8,16-bit canvas areas.
  */
-template <class O, class I>
+template <class O>
 class NanoDisplayOps: public O
 {
 public:
@@ -1181,11 +1178,11 @@ protected:
     virtual void end() = 0;
 };
 
-#include "ssd1306_1bit.inl"
-#include "ssd1306_4bit.inl"
-#include "ssd1306_8bit.inl"
-#include "ssd1306_16bit.inl"
-#include "ssd1306_common.inl"
+#include "display_1bit.inl"
+#include "display_4bit.inl"
+#include "display_8bit.inl"
+#include "display_16bit.inl"
+#include "display_common.inl"
 
 /**
  * @}

@@ -83,14 +83,9 @@ void mpu_task_finish(void)
 	}
 }
 
-
 void mpu_task(void *arg) 
 {
 	float roll{0}, pitch{0}, yaw{0};
-
-	MPU_t MPU;  // create a default MPU object
-    MPU.setBus(i2c0);  // set bus port, not really needed since default is i2c0
-    MPU.setAddr(mpud::MPU_I2CADDRESS_AD0_LOW);  // set address, default is AD0_LOW
 
     // Great! Let's verify the communication
     // (this also check if the connected MPU supports the implementation of chip selected in the component menu)
@@ -172,3 +167,12 @@ void mpu_task(void *arg)
 	}
 }
 
+
+void mpu_init()
+{
+  mpu_task_init();
+
+  //MPU: reads sensora
+  xTaskCreate(&mpu_task , "MPU" , 4096, NULL, 5, &mpu_task_handle);
+
+}

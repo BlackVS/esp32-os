@@ -1,7 +1,7 @@
 #include "app.h"
 
 
-#ifdef BOARD_BADGE_NNC2019
+#ifdef BADGE_CORONA
 
 
 #define TAG "OLED Ship"
@@ -20,6 +20,13 @@ static int game_level=0;
 const  int game_level_max=10;
 const  int game_total_score_max=game_level_next*game_level_max;
 
+#ifndef min
+#define min(x,y) ((x)<(y)?(x):(y))
+#endif
+
+#ifndef max
+#define max(x,y) ((x)>(y)?(x):(y))
+#endif
 
 const  int game_lives_max=9;
 static int game_lives=game_lives_max;

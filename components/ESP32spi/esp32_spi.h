@@ -2,7 +2,7 @@
 
 #include "driver/spi_master.h"
 #include "driver/gpio.h"
-#include "log.h"
+//#include "log.h"
 
 
 #define SPIHOST2STR(h) (((h)==VSPI_HOST)?"VSPI_HOST":(((h)==HSPI_HOST)?"HSPI_HOST":"SPI_HOST" ))

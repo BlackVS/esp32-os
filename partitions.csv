@@ -14,6 +14,8 @@ ota_1,     app,  ota_1,    0x190000,  0x180000
 # 400 000 - 310 000 = f0 000
 #additinal storage in flash for data, max f0 000 - size(nvs_key) - size(nvs_data)
 storage,   data, fat,      ,          0x20000
+
 #for compatability with official badge firmware
-nvs_key,  data, nvs_keys, ,          0x1000
-nvs_data, data, 0xDA,     ,          0x4000
+#storage,   data, fat,      ,          0x20000
+#nvs_key,  data, nvs_keys, ,          0x1000
+#nvs_data, data, 0xDA,     ,          0x4000

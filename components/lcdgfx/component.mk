@@ -8,7 +8,6 @@ COMPONENT_SRCDIRS := ./src \
                      ./src/v2 \
                      ./src/v2/lcd \
                      ./src/v2/lcd/ssd1306 \
-                     ./src/v2/lcd/st7735 \
                      ./src/canvas \
                      ./src/canvas/fonts \
                      ./src/v2/nano_engine \

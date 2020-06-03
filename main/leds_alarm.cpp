@@ -1,6 +1,6 @@
 #include "app.h"
 
-#ifdef BOARD_BADGE_NNC2019
+//#ifdef CONFIG_ESP32_BOARD_NNC2019
 
 #define LEDS_ALARM_REPEAT 20
 static bool leds_alarm_state =false;
@@ -75,4 +75,4 @@ void leds_alarm_set(bool v, uint32_t color, float fDim, uint32_t value, bool bRe
 }
 
 
-#endif
+//#endif

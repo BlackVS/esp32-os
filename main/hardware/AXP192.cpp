@@ -8,14 +8,13 @@ AXP192::AXP192(gpio_num_t sda_io_num,
    m_scl_io_num(scl_io_num),
    m_clk_speed(clk_speed),
    m_addr(addr),
-   m_i2c(I2C_NUM_0)
+   m_i2c(I2C_NUM_0, sda_io_num, scl_io_num, clk_speed )
 {
-   m_i2c.setAddr(addr);
+   //m_i2c.setAddr(addr);
 }
 
 void AXP192::init(bool disableLDO2, bool disableLDO3, bool disableRTC, bool disableDCDC1, bool disableDCDC3)
 {
-    m_i2c.setup(m_sda_io_num, m_scl_io_num, m_clk_speed);
     m_i2c.begin();
 
     // Set LDO2 & LDO3(TFT_LED & TFT) 3.0V

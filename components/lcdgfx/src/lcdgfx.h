@@ -35,7 +35,6 @@
 #include "nano_engine_v2.h"
 
 #include "v2/lcd/ssd1306/lcd_ssd1306.h"
-#include "v2/lcd/st7735/lcd_st7735.h"
 extern "C" {
 #endif
 

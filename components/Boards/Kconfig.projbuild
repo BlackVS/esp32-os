@@ -1,0 +1,19 @@
+menu "ESP32 target board"
+
+choice ESP32_BOARD_MODEL
+    prompt "ESP32 board model"
+    default ESP32_BOARD_NNC2019
+    help
+        Select ESP32 board model which will be used with this project.
+
+config ESP32_BOARD_NNC2019
+    bool "NNC2019"
+config ESP32_BOARD_TTGO
+    bool "TTGO"
+config ESP32_BOARD_M5STICKC
+    bool "M5STICKC"
+
+endchoice
+
+
+endmenu

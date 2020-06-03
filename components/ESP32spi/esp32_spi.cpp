@@ -2,17 +2,13 @@
 #include "freertos/task.h"
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
+#include "esp_log.h"
 
 #include <cstring>
 
 #include "esp32_spi.h"
 
 #define USE_POLLING_TRANSMIT 1
-
-void spi_delay(unsigned long ms)
-{
-    vTaskDelay(ms / portTICK_PERIOD_MS);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 #undef TAG
@@ -83,6 +79,8 @@ esp_err_t ESP32_SPIbus::end()
 
 esp_err_t ESP32_SPIdevice::begin()
 {
+    m_bus.begin();
+
     //ESP_LOGD(TAG, "%s()", __FUNCTION__);
     esp_err_t ret=ESP_OK;
 
@@ -159,7 +157,9 @@ esp_err_t ESP32_SPIdevice::write_byte(uint8_t data, bool bCaching)
 {
 	esp_err_t ret=ESP_OK;
     spi_transaction_t trans = {};
-
+    if(!m_dev_handle) {
+        return ESP_ERR_INVALID_ARG;
+    }
     if(!bCaching)
     {
         assert(m_data_size==0);
@@ -200,6 +200,9 @@ esp_err_t ESP32_SPIdevice::write_bytes(const uint8_t* buf, uint buflen)
 {
 	esp_err_t ret=ESP_OK;
     spi_transaction_t trans = {};
+    if(!m_dev_handle) {
+        return ESP_ERR_INVALID_ARG;
+    }
 
     if(buflen<=4) {
         memcpy( &trans.tx_data[0], buf, buflen);
@@ -246,6 +249,9 @@ esp_err_t ESP32_SPIdevice::write_cmd(uint8_t cmd)
 esp_err_t ESP32_SPIdevice::write_16bits(uint16_t word)
 {
     esp_err_t ret=ESP_OK;
+    if(!m_dev_handle) {
+        return ESP_ERR_INVALID_ARG;
+    }
 
     //uint8_t buf[2];
 	//buf[0] = (word >> 8) & 0xFF;
@@ -273,6 +279,10 @@ esp_err_t ESP32_SPIdevice::write_16bits(uint16_t word)
 esp_err_t ESP32_SPIdevice::write_2x16bits(uint16_t word1, uint16_t word2)
 {
     esp_err_t ret=ESP_OK;
+
+    if(!m_dev_handle) {
+        return ESP_ERR_INVALID_ARG;
+    }
 
     //uint8_t buf[2];
 	//buf[0] = (word >> 8) & 0xFF;

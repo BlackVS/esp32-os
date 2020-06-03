@@ -26,6 +26,16 @@
         "initializer_list": "cpp",
         "memory": "cpp",
         "bitset": "cpp",
-        "cstdlib": "cpp"
+        "cstdlib": "cpp",
+        "chrono": "cpp",
+        "limits": "cpp",
+        "optional": "cpp",
+        "future": "cpp",
+        "streambuf": "cpp",
+        "thread": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "variant": "cpp",
+        "utility": "cpp"
     }
 }

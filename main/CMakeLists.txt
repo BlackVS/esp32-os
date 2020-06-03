@@ -4,19 +4,11 @@ cmake_minimum_required(VERSION 3.5)
 set(COMPONENT_SRCDIRS .
                     hardware
                     console
-                    boards
-                    boards/nnc2019
-                    boards/m5stickc
-                    boards/TTGO
                     resources
                     )
 set(COMPONENT_ADD_INCLUDEDIRS .
                     hardware
                     console
-                    boards
-                    boards/nnc2019
-                    boards/m5stick
-                    boards/TTGO
                     resources
                     )
 

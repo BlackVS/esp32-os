@@ -48,11 +48,24 @@ extern uint8_t s_ssd1306_invertByte;
 }
 #endif
 
+class NanoDisplayInterface
+{
+    public:
+        virtual void start() = 0;
+        virtual void stop() = 0;
+       
+        virtual void send(uint8_t data) = 0;
+        virtual void sendBuffer(const uint8_t *buffer, uint16_t size) = 0;
+
+        virtual void startBlock(uint x, uint y, uint w)  = 0;
+        virtual void nextBlock() = 0;
+        virtual void endBlock() = 0;
+};
+
 /**
  * Class implements basic display operations for the library:
  * It stores reference to communication interafce, display size, etc.
  */
-template <class I>
 class NanoDisplayBase
 {
 public:
@@ -61,16 +74,12 @@ public:
      * If you this constructor is used, you must call begin() method before
      * working with canvas.
      */
-    NanoDisplayBase(I& intf): m_intf( intf ) {}
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-    /**
-     * Sets offset
-     * @param ox - X offset in pixels
-     * @param oy - Y offset in pixels
-     */
-    void setOffset(lcdint_t ox, lcdint_t oy) { };
-#endif
+    NanoDisplayBase(NanoDisplayInterface& intf): 
+        m_intf( intf ) 
+    {
+        //printf("PTR: %p (NanoDisplayBase, constr, intf)\n", &intf);
+        //printf("PTR: %p (NanoDisplayBase, constr, intf)\n", &m_intf);
+    }
 
     /**
      * Returns right-bottom point of the canvas in offset terms.
@@ -133,7 +142,7 @@ public:
      * This interface can be used to use display hardware related
      * features.
      */
-    I& getInterface() { return m_intf; }
+    NanoDisplayInterface& getInterface() { return m_intf; }
 
     /**
      * Sets new font to use with print functions.
@@ -247,7 +256,7 @@ protected:
     uint16_t  m_color = 0xFFFF;    ///< current color for monochrome operations
     NanoFont *m_font = nullptr; ///< currently set font
 
-    I& m_intf; ///< communication interface with the display
+    NanoDisplayInterface& m_intf; ///< communication interface with the display
 };
 
 /**

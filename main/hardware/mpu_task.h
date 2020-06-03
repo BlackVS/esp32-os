@@ -30,6 +30,7 @@ extern TaskHandle_t mpu_task_handle;
 void mpu_task(void *pvParameters);
 
 // should be called only once
+void mpu_init();
 void mpu_task_init(void);
 void mpu_task_finish(void);
 

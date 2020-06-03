@@ -1,30 +1,15 @@
 #include "app.h"
 
-__uint32_t millis(void)
-{
-   struct timespec ts;
-   clock_gettime(CLOCK_MONOTONIC, &ts);
-   return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
-};
+//__uint32_t millis(void)
+//{
+//   struct timespec ts;
+//   clock_gettime(CLOCK_MONOTONIC, &ts);
+//   return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+//};
 
 void delay(int ms)
 {
     vTaskDelay(pdMS_TO_TICKS(ms));
-}
-
-void print_time(void)
-{
-  time_t now;
-  char strftime_buf[64];
-  struct tm timeinfo;
-
-  time(&now);
-  setenv("TZ", "GMT0", 1);
-  tzset();
-
-  localtime_r(&now, &timeinfo);
-  strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
-  printf("The current date/time is: %s GMT0\n", strftime_buf);
 }
 
 void print_system_info(void)

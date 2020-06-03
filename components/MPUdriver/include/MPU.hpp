@@ -30,20 +30,8 @@
 #include "sdkconfig.h"
 
 #ifdef CONFIG_MPU_I2C
-#if !defined I2CBUS_COMPONENT_TRUE
-#error ''MPU component requires I2Cbus library. \
-Make sure the I2Cbus library is included in your components directory. \
-See MPUs README.md for more information.''
-#endif
-
 #include "I2Cbus.hpp"
-
 #elif CONFIG_MPU_SPI
-#if !defined SPIBUS_COMPONENT_TRUE
-#error ''MPU component requires SPIbus library. \
-Make sure the SPIbus library is included in your components directory. \
-See MPUs README.md for more information.''
-#endif
 #include "SPIbus.hpp"
 #else
 #error ''MPU communication protocol not specified''
@@ -68,7 +56,7 @@ class MPU
  public:
     //! \name Constructors / Destructor
     //! \{
-    MPU();
+    //MPU();
     explicit MPU(mpu_bus_t& bus);
     MPU(mpu_bus_t& bus, mpu_addr_handle_t addr);
     ~MPU();
@@ -262,13 +250,6 @@ class MPU
 // ==============
 namespace mpud
 {
-/*! Default Constructor. */
-inline MPU::MPU() : MPU(MPU_DEFAULT_BUS){};
-/**
- * @brief Contruct a MPU in the given communication bus.
- * @param bus Bus protocol object of type `I2Cbus` or `SPIbus`.
- */
-inline MPU::MPU(mpu_bus_t& bus) : MPU(bus, MPU_DEFAULT_ADDR_HANDLE) {}
 /**
  * @brief Construct a MPU in the given communication bus and address.
  * @param bus Bus protocol object of type `I2Cbus` or `SPIbus`.
