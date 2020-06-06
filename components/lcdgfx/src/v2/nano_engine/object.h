@@ -30,7 +30,7 @@
 
 #include "canvas/point.h"
 #include "canvas/rect.h"
-#include "lcd_hal/io.h"
+#include "platform.h"
 #include "tiler.h"
 
 /**
@@ -97,7 +97,7 @@ public:
     /**
      * Returns width of NanoObject
      */
-    lcdint_t width() const
+    int width() const
     {
         return m_rect.width();
     }
@@ -105,7 +105,7 @@ public:
     /**
      * Returns height of NanoObject
      */
-    lcdint_t height() const
+    int height() const
     {
         return m_rect.height();
     }
@@ -159,8 +159,8 @@ public:
     void setPos(const NanoPoint &p)
     {
         m_rect = (NanoRect){ p,
-                   (NanoPoint){ (lcdint_t)(p.x + m_rect.p2.x - m_rect.p1.x),
-                                (lcdint_t)(p.y + m_rect.p2.y - m_rect.p1.y) } };
+                   (NanoPoint){ (int)(p.x + m_rect.p2.x - m_rect.p1.x),
+                                (int)(p.y + m_rect.p2.y - m_rect.p1.y) } };
     }
 
     /**
@@ -168,7 +168,7 @@ public:
      */
     const NanoPoint bottom() const
     {
-        return { (lcdint_t)((m_rect.p1.x + m_rect.p2.x) >> 1), m_rect.p2.y  };
+        return { (int)((m_rect.p1.x + m_rect.p2.x) >> 1), m_rect.p2.y  };
     }
 
     /**
@@ -176,7 +176,7 @@ public:
      */
     const NanoPoint top() const
     {
-        return { (lcdint_t)((m_rect.p1.x + m_rect.p2.x) >> 1), m_rect.p1.y  };
+        return { (int)((m_rect.p1.x + m_rect.p2.x) >> 1), m_rect.p1.y  };
     }
 
     /**
@@ -184,7 +184,7 @@ public:
      */
     const NanoPoint left() const
     {
-        return { m_rect.p1.x, (lcdint_t)((m_rect.p1.y + m_rect.p2.y) >> 1)  };
+        return { m_rect.p1.x, (int)((m_rect.p1.y + m_rect.p2.y) >> 1)  };
     }
 
     /**
@@ -192,7 +192,7 @@ public:
      */
     const NanoPoint right() const
     {
-        return { m_rect.p2.x, (lcdint_t)((m_rect.p1.y + m_rect.p2.y) >> 1)  };
+        return { m_rect.p2.x, (int)((m_rect.p1.y + m_rect.p2.y) >> 1)  };
     }
 
     /**
@@ -200,19 +200,19 @@ public:
      */
     const NanoPoint center() const
     {
-        return { (lcdint_t)((m_rect.p1.x + m_rect.p2.x) >> 1),
-                 (lcdint_t)((m_rect.p1.y + m_rect.p2.y) >> 1) };
+        return { (int)((m_rect.p1.x + m_rect.p2.x) >> 1),
+                 (int)((m_rect.p1.y + m_rect.p2.y) >> 1) };
     }
 
     /**
      * Returns sprite x position
      */
-    lcdint_t x( ) const { return m_rect.p1.x; }
+    int x( ) const { return m_rect.p1.x; }
 
     /**
      * Returns sprite y position
      */
-    lcdint_t y( ) const { return m_rect.p1.y; }
+    int y( ) const { return m_rect.p1.y; }
 
     /**
      * Returns current sprite position (top-left corner)

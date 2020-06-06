@@ -47,7 +47,7 @@ class ESP32_SPIdevice
         
         //
         uint8_t  m_data_buf[SPI_DATA_BUF_SIZE];
-        uint     m_data_size = {0};
+        unsigned int     m_data_size = {0};
 
     public:
         ESP32_SPIdevice(ESP32_SPIbus& bus, gpio_num_t pin_reset, gpio_num_t pin_cs, gpio_num_t pin_dc, int freq=27000000)
@@ -65,12 +65,12 @@ class ESP32_SPIdevice
         esp_err_t begin();
         esp_err_t end();
 
-        esp_err_t reset(uint delayMs = 20);
+        esp_err_t reset(unsigned int delayMs = 20);
         
         esp_err_t write_byte (uint8_t  data, bool bCaching=false);
         esp_err_t flush_data();
 
-        esp_err_t write_bytes(const uint8_t* buf, uint buflen);
+        esp_err_t write_bytes(const uint8_t* buf, unsigned int buflen);
         esp_err_t write_cmd(uint8_t cmd);
         esp_err_t write_16bits(uint16_t word);
         esp_err_t write_2x16bits(uint16_t word1, uint16_t word2);

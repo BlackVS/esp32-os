@@ -94,14 +94,14 @@ public:
         {
             if ( this->hasTiler() )
             {
-                lcduint_t height;
-                lcduint_t width = this->getTiler().getDisplay().getFont().getTextSize(m_name, &height);
+                unsigned int height;
+                unsigned int width = this->getTiler().getDisplay().getFont().getTextSize(m_name, &height);
                 this->setSize( {width, height} );
             }
             else
             {
                 // At this point we don't know font to be used by a user
-                this->setSize( { this->width(), (lcduint_t)8 } );
+                this->setSize( { this->width(), (unsigned int)8 } );
             }
         }
     }

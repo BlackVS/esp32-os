@@ -1,10 +1,3 @@
-#
-# "main" pseudo-component makefile.
-#
-# (Uses default behaviour of compiling all source files in directory, adding 'include' to include path.)
-
-#COMPONENT_ADD_INCLUDEDIRS := . 
-
 COMPONENT_SRCDIRS := . 
 COMPONENT_SRCDIRS += console
 COMPONENT_SRCDIRS += hardware
@@ -16,3 +9,20 @@ COMPONENT_ADD_INCLUDEDIRS += hardware
 COMPONENT_ADD_INCLUDEDIRS += resources
 
 COMPONENT_ADD_LDFLAGS += -z muldefs
+
+ifdef CONFIG_ESP32_BOARD_NNC2019
+COMPONENT_ADD_INCLUDEDIRS += ./boards/nnc2019
+COMPONENT_SRCDIRS += ./boards/nnc2019
+endif
+
+ifdef CONFIG_ESP32_BOARD_M5STICKC
+COMPONENT_ADD_INCLUDEDIRS += ./boards/m5stickc
+COMPONENT_SRCDIRS += ./boards/m5stickc
+endif
+
+ifdef CONFIG_ESP32_BOARD_TTGO
+COMPONENT_ADD_INCLUDEDIRS += ./boards/ttgo
+COMPONENT_SRCDIRS += ./boards/ttgo
+endif
+
+

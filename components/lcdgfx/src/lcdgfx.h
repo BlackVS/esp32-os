@@ -30,13 +30,10 @@
 #include "nano_gfx_types.h"
 #include "canvas/fonts/fonts.h"
 
-#ifdef __cplusplus
 #include "canvas/canvas.h"
 #include "nano_engine_v2.h"
 
-#include "v2/lcd/ssd1306/lcd_ssd1306.h"
-extern "C" {
-#endif
+//#include "v2/lcd/ssd1306/lcd_ssd1306.h"
 
 /**
  * @defgroup LCD_GENERIC_API Generic API functions, common for all displays and all display modes.
@@ -57,9 +54,6 @@ void ssd1306_enableUtf8Mode2(void);
  */
 void ssd1306_enableAsciiMode2(void);
 
-#ifdef __cplusplus
-}
-#endif
 
 /**
  * @}

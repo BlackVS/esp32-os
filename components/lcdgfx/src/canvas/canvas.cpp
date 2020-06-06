@@ -39,7 +39,7 @@ void NanoCanvasOps<BPP>::putPixel(const NanoPoint &p)
 }
 
 template <uint8_t BPP>
-void NanoCanvasOps<BPP>::drawRect(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2)
+void NanoCanvasOps<BPP>::drawRect(int x1, int y1, int x2, int y2)
 {
     drawHLine(x1, y1, x2);
     drawHLine(x1, y2, x2);
@@ -54,17 +54,17 @@ void NanoCanvasOps<BPP>::drawRect(const NanoRect &rect)
 }
 
 template <uint8_t BPP>
-void NanoCanvasOps<BPP>::drawLine(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2)
+void NanoCanvasOps<BPP>::drawLine(int x1, int y1, int x2, int y2)
 {
-    lcduint_t  dx = x1 > x2 ? (x1 - x2): (x2 - x1);
-    lcduint_t  dy = y1 > y2 ? (y1 - y2): (y2 - y1);
-    lcduint_t  err = 0;
+    unsigned int  dx = x1 > x2 ? (x1 - x2): (x2 - x1);
+    unsigned int  dy = y1 > y2 ? (y1 - y2): (y2 - y1);
+    unsigned int  err = 0;
     if (dy > dx)
     {
         if (y1 > y2)
         {
-            canvas_swap_data(x1, x2, lcdint_t);
-            canvas_swap_data(y1, y2, lcdint_t);
+            canvas_swap_data(x1, x2, int);
+            canvas_swap_data(y1, y2, int);
         }
         for(; y1<=y2; y1++)
         {
@@ -81,8 +81,8 @@ void NanoCanvasOps<BPP>::drawLine(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_
     {
         if (x1 > x2)
         {
-            canvas_swap_data(x1, x2, lcdint_t);
-            canvas_swap_data(y1, y2, lcdint_t);
+            canvas_swap_data(x1, x2, int);
+            canvas_swap_data(y1, y2, int);
         }
         for(; x1<=x2; x1++)
         {
@@ -127,13 +127,13 @@ uint8_t NanoCanvasOps<BPP>::printChar(uint8_t c)
         m_textMode |= CANVAS_MODE_TRANSPARENT;
     }
     m_textMode = mode;
-    m_cursorX += (lcdint_t)(char_info.width + char_info.spacing);
+    m_cursorX += (int)(char_info.width + char_info.spacing);
     if ( (m_textMode & CANVAS_TEXT_WRAP_LOCAL) &&
-           (m_cursorX > (lcdint_t)m_w - (lcdint_t)m_font->getHeader().width) )
+           (m_cursorX > (int)m_w - (int)m_font->getHeader().width) )
     {
-        m_cursorY += (lcdint_t)m_font->getHeader().height;
+        m_cursorY += (int)m_font->getHeader().height;
         m_cursorX = 0;
-        if ( (m_textMode & CANVAS_TEXT_WRAP_LOCAL) && (m_cursorY > ((lcdint_t)m_h - (lcdint_t)m_font->getHeader().height)) )
+        if ( (m_textMode & CANVAS_TEXT_WRAP_LOCAL) && (m_cursorY > ((int)m_h - (int)m_font->getHeader().height)) )
         {
             m_cursorY = 0;
         }
@@ -146,7 +146,7 @@ size_t NanoCanvasOps<BPP>::write(uint8_t c)
 {
     if (c == '\n')
     {
-        m_cursorY += (lcdint_t)m_font->getHeader().height;
+        m_cursorY += (int)m_font->getHeader().height;
         m_cursorX = 0;
     }
     else if (c == '\r')
@@ -161,7 +161,7 @@ size_t NanoCanvasOps<BPP>::write(uint8_t c)
 }
 
 template <uint8_t BPP>
-void NanoCanvasOps<BPP>::printFixed(lcdint_t xpos, lcdint_t y, const char *ch, EFontStyle style)
+void NanoCanvasOps<BPP>::printFixed(int xpos, int y, const char *ch, EFontStyle style)
 {
     m_fontStyle = style;
     m_cursorX = xpos;
@@ -174,7 +174,7 @@ void NanoCanvasOps<BPP>::printFixed(lcdint_t xpos, lcdint_t y, const char *ch, E
 }
 
 template <uint8_t BPP>
-void NanoCanvasOps<BPP>::printFixedPgm(lcdint_t xpos, lcdint_t y, const char *ch, EFontStyle style)
+void NanoCanvasOps<BPP>::printFixedPgm(int xpos, int y, const char *ch, EFontStyle style)
 {
     m_fontStyle = style;
     m_cursorX = xpos;
@@ -204,12 +204,12 @@ void NanoCanvasOps<BPP>::printFixedPgm(lcdint_t xpos, lcdint_t y, const char *ch
 #endif
 
 template <>
-void NanoCanvasOps<1>::putPixel(lcdint_t x, lcdint_t y)
+void NanoCanvasOps<1>::putPixel(int x, int y)
 {
     x -= offset.x;
     y -= offset.y;
     if ((x<0) || (y<0)) return;
-    if (( x >= (lcdint_t)m_w ) || ( y >= (lcdint_t)m_h)) return;
+    if (( x >= (int)m_w ) || ( y >= (int)m_h)) return;
     if (m_color)
     {
         m_buf[YADDR1(y) + x] |= (1 << (y & 0x7));
@@ -221,16 +221,16 @@ void NanoCanvasOps<1>::putPixel(lcdint_t x, lcdint_t y)
 }
 
 template <>
-void NanoCanvasOps<1>::drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2)
+void NanoCanvasOps<1>::drawHLine(int x1, int y1, int x2)
 {
-    if (x2 < x1) canvas_swap_data(x2, x1, lcdint_t);
+    if (x2 < x1) canvas_swap_data(x2, x1, int);
     x1 -= offset.x;
     x2 -= offset.x;
     y1 -= offset.y;
-    if ((y1 >= (lcdint_t)m_h) || (y1 < 0)) return;
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
+    if ((y1 >= (int)m_h) || (y1 < 0)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
     x1 = max(0, x1);
-    x2 = min(x2, (lcdint_t)(m_w -1));
+    x2 = min(x2, (int)(m_w -1));
     uint16_t addr = YADDR1(y1) + x1;
     uint8_t mask = (1 << (y1 & 0x7));
     if (m_color)
@@ -244,16 +244,16 @@ void NanoCanvasOps<1>::drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2)
 }
 
 template <>
-void NanoCanvasOps<1>::drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2)
+void NanoCanvasOps<1>::drawVLine(int x1, int y1, int y2)
 {
-    if (y2 < y1) canvas_swap_data(y2, y1, lcdint_t);
+    if (y2 < y1) canvas_swap_data(y2, y1, int);
     x1 -= offset.x;
     y1 -= offset.y;
     y2 -= offset.y;
-    if ((x1 >= (lcdint_t)m_w) || (x1 < 0)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x1 >= (int)m_w) || (x1 < 0)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
     y1 = max(0, y1);
-    y2 = min(y2, (lcdint_t)(m_h -1));
+    y2 = min(y2, (int)(m_h -1));
 
     uint16_t addr = YADDR1(y1) + x1;
     if ((y1 & 0xFFF8) == (y2 & 0xFFF8))
@@ -290,20 +290,20 @@ void NanoCanvasOps<1>::drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2)
 }
 
 template <>
-void NanoCanvasOps<1>::fillRect(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2)
+void NanoCanvasOps<1>::fillRect(int x1, int y1, int x2, int y2)
 {
-    if (x2 < x1) canvas_swap_data(x2, x1, lcdint_t);
-    if (y2 < y1) canvas_swap_data(y2, y1, lcdint_t);
+    if (x2 < x1) canvas_swap_data(x2, x1, int);
+    if (y2 < y1) canvas_swap_data(y2, y1, int);
     x1 -= offset.x;
     x2 -= offset.x;
     y1 -= offset.y;
     y2 -= offset.y;
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
     x1 = max(0, x1);
-    x2 = min(x2, (lcdint_t)(m_w - 1));
+    x2 = min(x2, (int)(m_w - 1));
     y1 = max(0, y1);
-    y2 = min(y2, (lcdint_t)(m_h - 1));
+    y2 = min(y2, (int)(m_h - 1));
     uint8_t bank1 = (y1 >> 3);
     uint8_t bank2 = (y2 >> 3);
     for (uint8_t bank = bank1; bank<=bank2; bank++)
@@ -343,21 +343,21 @@ void NanoCanvasOps<1>::clear()
 
 // TODO: Not so fast implementation. needs to be optimized
 template <>
-void NanoCanvasOps<1>::drawBitmap1(lcdint_t x, lcdint_t y, lcduint_t w, lcduint_t h, const uint8_t *bitmap)
+void NanoCanvasOps<1>::drawBitmap1(int x, int y, unsigned int w, unsigned int h, const uint8_t *bitmap)
 {
     x -= offset.x;
     y -= offset.y;
-    lcduint_t origin_width = w;
+    unsigned int origin_width = w;
     uint8_t offs = y & 0x07;
     uint8_t complexFlag = 0;
     uint8_t mainFlag = 1;
-    if (y + (lcdint_t)h <= 0) return;
-    if (y >= (lcdint_t)m_h) return;
-    if (x + (lcdint_t)w <= 0) return;
-    if (x >= (lcdint_t)m_w)  return;
+    if (y + (int)h <= 0) return;
+    if (y >= (int)m_h) return;
+    if (x + (int)w <= 0) return;
+    if (x >= (int)m_w)  return;
     if (y < 0)
     {
-         bitmap += ((lcduint_t)((-y) + 7) >> 3) * w;
+         bitmap += ((unsigned int)((-y) + 7) >> 3) * w;
          h += y;
          y = 0;
          complexFlag = 1;
@@ -368,18 +368,18 @@ void NanoCanvasOps<1>::drawBitmap1(lcdint_t x, lcdint_t y, lcduint_t w, lcduint_
          w += x;
          x = 0;
     }
-    uint8_t max_pages = (lcduint_t)(h + 15 - offs) >> 3;
-    if ((lcduint_t)(y + (lcdint_t)h) > (lcduint_t)m_h)
+    uint8_t max_pages = (unsigned int)(h + 15 - offs) >> 3;
+    if ((unsigned int)(y + (int)h) > (unsigned int)m_h)
     {
-         h = (lcduint_t)(m_h - (lcduint_t)y);
+         h = (unsigned int)(m_h - (unsigned int)y);
     }
-    if ((lcduint_t)(x + (lcdint_t)w) > (lcduint_t)m_w)
+    if ((unsigned int)(x + (int)w) > (unsigned int)m_w)
     {
-         w = (lcduint_t)(m_w - (lcduint_t)x);
+         w = (unsigned int)(m_w - (unsigned int)x);
     }
     uint8_t pages = ((y + h - 1) >> 3) - (y >> 3) + 1;
     uint8_t j;
-    lcduint_t i;
+    unsigned int i;
 
     for(j=0; j < pages; j++)
     {
@@ -412,7 +412,7 @@ void NanoCanvasOps<1>::drawBitmap1(lcdint_t x, lcdint_t y, lcduint_t w, lcduint_
 }
 
 template <>
-void NanoCanvasOps<1>::begin(lcdint_t w, lcdint_t h, uint8_t *bytes)
+void NanoCanvasOps<1>::begin(int w, int h, uint8_t *bytes)
 {
     m_w = w;
     m_h = h;
@@ -438,11 +438,11 @@ void NanoCanvasOps<1>::begin(lcdint_t w, lcdint_t h, uint8_t *bytes)
 #define BITS_SHIFT4(x) ((x & 1) ? 4 : 0)
 
 template <>
-void NanoCanvasOps<4>::putPixel(lcdint_t x, lcdint_t y)
+void NanoCanvasOps<4>::putPixel(int x, int y)
 {
     x -= offset.x;
     y -= offset.y;
-    if ((x >= 0) && (y >= 0) && (x < (lcdint_t)m_w) && (y < (lcdint_t)m_h))
+    if ((x >= 0) && (y >= 0) && (x < (int)m_w) && (y < (int)m_h))
     {
         m_buf[YADDR4(y) + x / 2] &= ~(0x0F << BITS_SHIFT4(x));
         m_buf[YADDR4(y) + x / 2] |= (m_color & 0x0F) << BITS_SHIFT4(x);
@@ -450,19 +450,19 @@ void NanoCanvasOps<4>::putPixel(lcdint_t x, lcdint_t y)
 }
 
 template <>
-void NanoCanvasOps<4>::drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2)
+void NanoCanvasOps<4>::drawVLine(int x1, int y1, int y2)
 {
     x1 -= offset.x;
     y1 -= offset.y;
     y2 -= offset.y;
     if (y1 > y2)
     {
-        canvas_swap_data(y1, y2, lcdint_t);
+        canvas_swap_data(y1, y2, int);
     }
-    if ((x1 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x1 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
     y1 = max(y1,0);
-    y2 = min(y2,(lcdint_t)m_h-1) - y1;
+    y2 = min(y2,(int)m_h-1) - y1;
     uint8_t *buf = m_buf + YADDR4(y1) + x1 / 2;
     do
     {
@@ -474,21 +474,21 @@ void NanoCanvasOps<4>::drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2)
 }
 
 template <>
-void NanoCanvasOps<4>::drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2)
+void NanoCanvasOps<4>::drawHLine(int x1, int y1, int x2)
 {
     x1 -= offset.x;
     y1 -= offset.y;
     x2 -= offset.x;
     if (x1 > x2)
     {
-        canvas_swap_data(x1, x2, lcdint_t);
+        canvas_swap_data(x1, x2, int);
     }
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y1 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y1 < 0) || (y1 >= (int)m_h)) return;
     x1 = max(x1,0);
-    x2 = min(x2,(lcdint_t)m_w-1);
+    x2 = min(x2,(int)m_w-1);
     uint8_t *buf = m_buf + YADDR4(y1) + x1 / 2;
-    for (lcdint_t x = x1; x <= x2; x++)
+    for (int x = x1; x <= x2; x++)
     {
         *buf &= ~(0x0F << BITS_SHIFT4(x));
         *buf |= ((m_color & 0x0F) << BITS_SHIFT4(x));
@@ -500,30 +500,30 @@ void NanoCanvasOps<4>::drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2)
 }
 
 template <>
-void NanoCanvasOps<4>::fillRect(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2)
+void NanoCanvasOps<4>::fillRect(int x1, int y1, int x2, int y2)
 {
     if (y1 > y2)
     {
-        canvas_swap_data(y1, y2, lcdint_t);
+        canvas_swap_data(y1, y2, int);
     }
     if (x1 > x2)
     {
-        canvas_swap_data(x1, x2, lcdint_t);
+        canvas_swap_data(x1, x2, int);
     }
     x1 -= offset.x;
     y1 -= offset.y;
     x2 -= offset.x;
     y2 -= offset.y;
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
     x1 = max(x1,0);
-    x2 = min(x2,(lcdint_t)m_w-1);
+    x2 = min(x2,(int)m_w-1);
     y1 = max(y1,0);
-    y2 = min(y2,(lcdint_t)m_h-1);
+    y2 = min(y2,(int)m_h-1);
     uint8_t *buf = m_buf + YADDR4(y1) + x1 / 2;
-    for (lcdint_t y = y1; y <= y2; y++)
+    for (int y = y1; y <= y2; y++)
     {
-        for (lcdint_t x = x1; x <= x2; x++)
+        for (int x = x1; x <= x2; x++)
         {
             *buf &= ~(0x0F << BITS_SHIFT4(x));
             *buf |= ((m_color & 0xF) << BITS_SHIFT4(x));
@@ -532,25 +532,25 @@ void NanoCanvasOps<4>::fillRect(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t 
                 buf++;
             }
         }
-        buf += ((lcdint_t)(m_w) - (x2 - x1 + ((x2 - x1) & 0x1))) / 2;
+        buf += ((int)(m_w) - (x2 - x1 + ((x2 - x1) & 0x1))) / 2;
     }
 }
 
 template <>
-void NanoCanvasOps<4>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lcduint_t h, const uint8_t *bitmap)
+void NanoCanvasOps<4>::drawBitmap1(int xpos, int ypos, unsigned int w, unsigned int h, const uint8_t *bitmap)
 {
-    lcdint_t xb1 = 0;
-    lcdint_t yb1 = 0;
-    lcdint_t xb2 = (lcdint_t)w - 1;
-    lcdint_t yb2 = (lcdint_t)h - 1;
+    int xb1 = 0;
+    int yb1 = 0;
+    int xb2 = (int)w - 1;
+    int yb2 = (int)h - 1;
     /* calculate char rectangle */
-    lcdint_t x1 = xpos - offset.x;
-    lcdint_t y1 = ypos - offset.y;
-    lcdint_t x2 = x1 + xb2;
-    lcdint_t y2 = y1 + yb2;
+    int x1 = xpos - offset.x;
+    int y1 = ypos - offset.y;
+    int x2 = x1 + xb2;
+    int y2 = y1 + yb2;
     /* clip bitmap */
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
 
     if (x1 < 0)
     {
@@ -562,19 +562,19 @@ void NanoCanvasOps<4>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lc
         yb1 -= y1;
         y1 = 0;
     }
-    if (y2 >= (lcdint_t)m_h)
+    if (y2 >= (int)m_h)
     {
-//         yb2 -= (y2 - (lcdint_t)m_h + 1);
-         y2 = (lcdint_t)m_h - 1;
+//         yb2 -= (y2 - (int)m_h + 1);
+         y2 = (int)m_h - 1;
     }
-    if (x2 >= (lcdint_t)m_w)
+    if (x2 >= (int)m_w)
     {
-//         xb2 -= (x2 - (lcdint_t)m_w + 1);
-         x2 = (lcdint_t)m_w - 1;
+//         xb2 -= (x2 - (int)m_w + 1);
+         x2 = (int)m_w - 1;
     }
-    for ( lcdint_t y = y1; y <= y2; y++ )
+    for ( int y = y1; y <= y2; y++ )
     {
-        for ( lcdint_t x = x1; x <= x2; x++ )
+        for ( int x = x1; x <= x2; x++ )
         {
             uint16_t src_addr1 = xb1 + x - x1 + ((yb1 + y - y1) / 8) * w;
             uint8_t src_bit1 = (yb1 + y - y1) & 0x07;
@@ -596,20 +596,20 @@ void NanoCanvasOps<4>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lc
 }
 
 template <>
-void NanoCanvasOps<4>::drawBitmap8(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lcduint_t h, const uint8_t *bitmap)
+void NanoCanvasOps<4>::drawBitmap8(int xpos, int ypos, unsigned int w, unsigned int h, const uint8_t *bitmap)
 {
-    lcdint_t xb1 = 0;
-    lcdint_t yb1 = 0;
-    lcdint_t xb2 = (lcdint_t)w - 1;
-    lcdint_t yb2 = (lcdint_t)h - 1;
+    int xb1 = 0;
+    int yb1 = 0;
+    int xb2 = (int)w - 1;
+    int yb2 = (int)h - 1;
     /* calculate char rectangle */
-    lcdint_t x1 = xpos - offset.x;
-    lcdint_t y1 = ypos - offset.y;
-    lcdint_t x2 = x1 + xb2;
-    lcdint_t y2 = y1 + yb2;
+    int x1 = xpos - offset.x;
+    int y1 = ypos - offset.y;
+    int x2 = x1 + xb2;
+    int y2 = y1 + yb2;
     /* clip bitmap */
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
 
     if (x1 < 0)
     {
@@ -621,19 +621,19 @@ void NanoCanvasOps<4>::drawBitmap8(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lc
         yb1 -= y1;
         y1 = 0;
     }
-    if (y2 >= (lcdint_t)m_h)
+    if (y2 >= (int)m_h)
     {
-//         yb2 -= (y2 - (lcdint_t)m_h + 1);
-         y2 = (lcdint_t)m_h - 1;
+//         yb2 -= (y2 - (int)m_h + 1);
+         y2 = (int)m_h - 1;
     }
-    if (x2 >= (lcdint_t)m_w)
+    if (x2 >= (int)m_w)
     {
-//         xb2 -= (x2 - (lcdint_t)m_w + 1);
-         x2 = (lcdint_t)m_w - 1;
+//         xb2 -= (x2 - (int)m_w + 1);
+         x2 = (int)m_w - 1;
     }
-    for ( lcdint_t y = y1; y <= y2; y++ )
+    for ( int y = y1; y <= y2; y++ )
     {
-        for ( lcdint_t x = x1; x <= x2; x++ )
+        for ( int x = x1; x <= x2; x++ )
         {
             uint16_t src_addr8 = xb1 + x - x1 + ((yb1 + y - y1)) * w;
             uint8_t data = pgm_read_byte( &bitmap[ src_addr8 ] );
@@ -656,7 +656,7 @@ void NanoCanvasOps<4>::clear()
 
 /* This method must be implemented always after clear() */
 template <>
-void NanoCanvasOps<4>::begin(lcdint_t w, lcdint_t h, uint8_t *bytes)
+void NanoCanvasOps<4>::begin(int w, int h, uint8_t *bytes)
 {
     m_w = w;
     m_h = h;
@@ -681,31 +681,31 @@ void NanoCanvasOps<4>::begin(lcdint_t w, lcdint_t h, uint8_t *bytes)
 #define YADDR8(y) (static_cast<uint32_t>(y) * m_w)
 
 template <>
-void NanoCanvasOps<8>::putPixel(lcdint_t x, lcdint_t y)
+void NanoCanvasOps<8>::putPixel(int x, int y)
 {
     x -= offset.x;
     y -= offset.y;
-    if ((x >= 0) && (y >= 0) && (x < (lcdint_t)m_w) && (y < (lcdint_t)m_h))
+    if ((x >= 0) && (y >= 0) && (x < (int)m_w) && (y < (int)m_h))
     {
         m_buf[YADDR8(y) + x] = m_color;
     }
 }
 
 template <>
-void NanoCanvasOps<8>::drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2)
+void NanoCanvasOps<8>::drawVLine(int x1, int y1, int y2)
 {
     x1 -= offset.x;
     y1 -= offset.y;
     y2 -= offset.y;
     if (y1 > y2)
     {
-        canvas_swap_data(y1, y2, lcdint_t);
+        canvas_swap_data(y1, y2, int);
     }
-    if ((x1 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x1 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
     y1 = max(y1,0);
     uint8_t *buf = m_buf + YADDR8(y1) + x1;
-    y2 = min(y2,(lcdint_t)m_h-1) - y1;
+    y2 = min(y2,(int)m_h-1) - y1;
     do
     {
         *buf = m_color;
@@ -715,21 +715,21 @@ void NanoCanvasOps<8>::drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2)
 }
 
 template <>
-void NanoCanvasOps<8>::drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2)
+void NanoCanvasOps<8>::drawHLine(int x1, int y1, int x2)
 {
     x1 -= offset.x;
     y1 -= offset.y;
     x2 -= offset.x;
     if (x1 > x2)
     {
-        canvas_swap_data(x1, x2, lcdint_t);
+        canvas_swap_data(x1, x2, int);
     }
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y1 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y1 < 0) || (y1 >= (int)m_h)) return;
     x1 = max(x1,0);
-    x2 = min(x2,(lcdint_t)m_w-1);
+    x2 = min(x2,(int)m_w-1);
     uint8_t *buf = m_buf + YADDR8(y1) + x1;
-    for (lcdint_t x = 0; x <= x2 - x1; x++)
+    for (int x = 0; x <= x2 - x1; x++)
     {
         *buf = m_color;
         buf++;
@@ -737,50 +737,50 @@ void NanoCanvasOps<8>::drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2)
 }
 
 template <>
-void NanoCanvasOps<8>::fillRect(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2)
+void NanoCanvasOps<8>::fillRect(int x1, int y1, int x2, int y2)
 {
     if (y1 > y2)
     {
-        canvas_swap_data(y1, y2, lcdint_t);
+        canvas_swap_data(y1, y2, int);
     }
     if (x1 > x2)
     {
-        canvas_swap_data(x1, x2, lcdint_t);
+        canvas_swap_data(x1, x2, int);
     }
     x1 -= offset.x;
     y1 -= offset.y;
     x2 -= offset.x;
     y2 -= offset.y;
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
     x1 = max(x1,0);
-    x2 = min(x2,(lcdint_t)m_w-1);
+    x2 = min(x2,(int)m_w-1);
     y1 = max(y1,0);
-    y2 = min(y2,(lcdint_t)m_h-1);
+    y2 = min(y2,(int)m_h-1);
     uint8_t *buf = m_buf + YADDR8(y1) + x1;
-    for (lcdint_t y = y1; y <= y2; y++)
+    for (int y = y1; y <= y2; y++)
     {
-        for (lcdint_t x = x1; x <= x2; x++)
+        for (int x = x1; x <= x2; x++)
         {
             *buf = m_color;
             buf++;
         }
-        buf += ((lcdint_t)(m_w) - (x2 - x1 + 1));
+        buf += ((int)(m_w) - (x2 - x1 + 1));
     }
 }
 
 template <>
-void NanoCanvasOps<8>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lcduint_t h, const uint8_t *bitmap)
+void NanoCanvasOps<8>::drawBitmap1(int xpos, int ypos, unsigned int w, unsigned int h, const uint8_t *bitmap)
 {
     uint8_t offs = 0;
     /* calculate char rectangle */
-    lcdint_t x1 = xpos - offset.x;
-    lcdint_t y1 = ypos - offset.y;
-    lcdint_t x2 = x1 + (lcdint_t)w - 1;
-    lcdint_t y2 = y1 + (lcdint_t)h - 1;
+    int x1 = xpos - offset.x;
+    int y1 = ypos - offset.y;
+    int x2 = x1 + (int)w - 1;
+    int y2 = y1 + (int)h - 1;
     /* clip bitmap */
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
 
     if (x1 < 0)
     {
@@ -789,23 +789,23 @@ void NanoCanvasOps<8>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lc
     }
     if (y1 < 0)
     {
-        bitmap += ((lcduint_t)(-y1) >> 3) * w;
+        bitmap += ((unsigned int)(-y1) >> 3) * w;
         offs = ((-y1) & 0x07);
         y1 = 0;
     }
-    if (y2 >= (lcdint_t)m_h)
+    if (y2 >= (int)m_h)
     {
-         y2 = (lcdint_t)m_h - 1;
+         y2 = (int)m_h - 1;
     }
-    if (x2 >= (lcdint_t)m_w)
+    if (x2 >= (int)m_w)
     {
-         x2 = (lcdint_t)m_w - 1;
+         x2 = (int)m_w - 1;
     }
     uint8_t offs2 = 8 - offs;
-    lcdint_t y = y1;
+    int y = y1;
     while ( y <= y2)
     {
-        for ( lcdint_t x = x1; x <= x2; x++ )
+        for ( int x = x1; x <= x2; x++ )
         {
             uint8_t data = pgm_read_byte( bitmap );
             uint16_t addr = YADDR8(y) + x;
@@ -815,7 +815,7 @@ void NanoCanvasOps<8>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lc
                     m_buf[addr] = m_color;
                 else if (!(m_textMode & CANVAS_MODE_TRANSPARENT))
                     m_buf[addr] = 0x00;
-                addr += (lcduint_t)m_w;
+                addr += (unsigned int)m_w;
             }
             bitmap++;
         }
@@ -827,16 +827,16 @@ void NanoCanvasOps<8>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lc
 }
 
 template <>
-void NanoCanvasOps<8>::drawBitmap8(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lcduint_t h, const uint8_t *bitmap)
+void NanoCanvasOps<8>::drawBitmap8(int xpos, int ypos, unsigned int w, unsigned int h, const uint8_t *bitmap)
 {
     /* calculate char rectangle */
-    lcdint_t x1 = xpos - offset.x;
-    lcdint_t y1 = ypos - offset.y;
-    lcdint_t x2 = x1 + (lcdint_t)w - 1;
-    lcdint_t y2 = y1 + (lcdint_t)h - 1;
+    int x1 = xpos - offset.x;
+    int y1 = ypos - offset.y;
+    int x2 = x1 + (int)w - 1;
+    int y2 = y1 + (int)h - 1;
     /* clip bitmap */
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
 
     if (x1 < 0)
     {
@@ -845,21 +845,21 @@ void NanoCanvasOps<8>::drawBitmap8(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lc
     }
     if (y1 < 0)
     {
-        bitmap += (lcduint_t)(-y1) * w;
+        bitmap += (unsigned int)(-y1) * w;
         y1 = 0;
     }
-    if (y2 >= (lcdint_t)m_h)
+    if (y2 >= (int)m_h)
     {
-         y2 = (lcdint_t)m_h - 1;
+         y2 = (int)m_h - 1;
     }
-    if (x2 >= (lcdint_t)m_w)
+    if (x2 >= (int)m_w)
     {
-         x2 = (lcdint_t)m_w - 1;
+         x2 = (int)m_w - 1;
     }
-    lcdint_t y = y1;
+    int y = y1;
     while ( y <= y2 )
     {
-        for ( lcdint_t x = x1; x <= x2; x++ )
+        for ( int x = x1; x <= x2; x++ )
         {
             uint8_t data = pgm_read_byte( bitmap );
             if ( (data) || (!(m_textMode & CANVAS_MODE_TRANSPARENT)) )
@@ -881,7 +881,7 @@ void NanoCanvasOps<8u>::clear()
 
 /* This method must be implemented always after clear() */
 template <>
-void NanoCanvasOps<8>::begin(lcdint_t w, lcdint_t h, uint8_t *bytes)
+void NanoCanvasOps<8>::begin(int w, int h, uint8_t *bytes)
 {
     m_w = w;
     m_h = h;
@@ -906,11 +906,11 @@ void NanoCanvasOps<8>::begin(lcdint_t w, lcdint_t h, uint8_t *bytes)
 #define YADDR16(y) (static_cast<uint32_t>(y) * (m_w << 1))
 
 template <>
-void NanoCanvasOps<16>::putPixel(lcdint_t x, lcdint_t y)
+void NanoCanvasOps<16>::putPixel(int x, int y)
 {
     x -= offset.x;
     y -= offset.y;
-    if ((x >= 0) && (y >= 0) && (x < (lcdint_t)m_w) && (y < (lcdint_t)m_h))
+    if ((x >= 0) && (y >= 0) && (x < (int)m_w) && (y < (int)m_h))
     {
         m_buf[YADDR16(y) + (x<<1)] = m_color >> 8;
         m_buf[YADDR16(y) + (x<<1) + 1] = m_color & 0xFF;
@@ -918,20 +918,20 @@ void NanoCanvasOps<16>::putPixel(lcdint_t x, lcdint_t y)
 }
 
 template <>
-void NanoCanvasOps<16>::drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2)
+void NanoCanvasOps<16>::drawVLine(int x1, int y1, int y2)
 {
     x1 -= offset.x;
     y1 -= offset.y;
     y2 -= offset.y;
     if (y1 > y2)
     {
-        canvas_swap_data(y1, y2, lcdint_t);
+        canvas_swap_data(y1, y2, int);
     }
-    if ((x1 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x1 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
     y1 = max(y1,0);
     uint8_t *buf = m_buf + YADDR16(y1) + (x1 << 1);
-    y2 = min(y2,(lcdint_t)m_h-1) - y1;
+    y2 = min(y2,(int)m_h-1) - y1;
     do
     {
         buf[0] = m_color >> 8;
@@ -942,21 +942,21 @@ void NanoCanvasOps<16>::drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2)
 }
 
 template <>
-void NanoCanvasOps<16>::drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2)
+void NanoCanvasOps<16>::drawHLine(int x1, int y1, int x2)
 {
     x1 -= offset.x;
     y1 -= offset.y;
     x2 -= offset.x;
     if (x1 > x2)
     {
-        canvas_swap_data(x1, x2, lcdint_t);
+        canvas_swap_data(x1, x2, int);
     }
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y1 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y1 < 0) || (y1 >= (int)m_h)) return;
     x1 = max(x1,0);
-    x2 = min(x2,(lcdint_t)m_w-1);
+    x2 = min(x2,(int)m_w-1);
     uint8_t *buf = m_buf + YADDR16(y1) + (x1<<1);
-    for (lcdint_t x = 0; x <= x2 - x1; x++)
+    for (int x = 0; x <= x2 - x1; x++)
     {
         buf[0] = m_color >> 8;
         buf[1] = m_color & 0xFF;
@@ -965,51 +965,52 @@ void NanoCanvasOps<16>::drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2)
 }
 
 template <>
-void NanoCanvasOps<16>::fillRect(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2)
+void NanoCanvasOps<16>::fillRect(int x1, int y1, int x2, int y2)
 {
     if (y1 > y2)
     {
-        canvas_swap_data(y1, y2, lcdint_t);
+        canvas_swap_data(y1, y2, int);
     }
     if (x1 > x2)
     {
-        canvas_swap_data(x1, x2, lcdint_t);
+        canvas_swap_data(x1, x2, int);
     }
     x1 -= offset.x;
     y1 -= offset.y;
     x2 -= offset.x;
     y2 -= offset.y;
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
     x1 = max(x1,0);
-    x2 = min(x2,(lcdint_t)m_w-1);
+    x2 = min(x2,(int)m_w-1);
     y1 = max(y1,0);
-    y2 = min(y2,(lcdint_t)m_h-1);
+    y2 = min(y2,(int)m_h-1);
     uint8_t *buf = m_buf + YADDR16(y1) + (x1<<1);
-    for (lcdint_t y = y1; y <= y2; y++)
+    for (int y = y1; y <= y2; y++)
     {
-        for (lcdint_t x = x1; x <= x2; x++)
+        for (int x = x1; x <= x2; x++)
         {
             buf[0] = m_color >> 8;
             buf[1] = m_color & 0xFF;
             buf+=2;
         }
-        buf += ( ((lcdint_t)(m_w) - (x2 - x1 + 1)) <<1 );
+        buf += ( ((int)(m_w) - (x2 - x1 + 1)) <<1 );
     }
 }
 
 template <>
-void NanoCanvasOps<16>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lcduint_t h, const uint8_t *bitmap)
+void NanoCanvasOps<16>::drawBitmap1(int xpos, int ypos, unsigned int w, unsigned int h, const uint8_t *bitmap)
 {
+    if(!bitmap) return;
     uint8_t offs = 0;
     /* calculate char rectangle */
-    lcdint_t x1 = xpos - offset.x;
-    lcdint_t y1 = ypos - offset.y;
-    lcdint_t x2 = x1 + (lcdint_t)w - 1;
-    lcdint_t y2 = y1 + (lcdint_t)h - 1;
+    int x1 = xpos - offset.x;
+    int y1 = ypos - offset.y;
+    int x2 = x1 + (int)w - 1;
+    int y2 = y1 + (int)h - 1;
     /* clip bitmap */
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
 
     if (x1 < 0)
     {
@@ -1018,23 +1019,23 @@ void NanoCanvasOps<16>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, l
     }
     if (y1 < 0)
     {
-        bitmap += ((lcduint_t)(-y1) >> 3) * w;
+        bitmap += ((unsigned int)(-y1) >> 3) * w;
         offs = ((-y1) & 0x07);
         y1 = 0;
     }
-    if (y2 >= (lcdint_t)m_h)
+    if (y2 >= (int)m_h)
     {
-         y2 = (lcdint_t)m_h - 1;
+         y2 = (int)m_h - 1;
     }
-    if (x2 >= (lcdint_t)m_w)
+    if (x2 >= (int)m_w)
     {
-         x2 = (lcdint_t)m_w - 1;
+         x2 = (int)m_w - 1;
     }
     uint8_t offs2 = 8 - offs;
-    lcdint_t y = y1;
+    int y = y1;
     while ( y <= y2)
     {
-        for ( lcdint_t x = x1; x <= x2; x++ )
+        for ( int x = x1; x <= x2; x++ )
         {
             uint8_t data = pgm_read_byte( bitmap );
             uint16_t addr = YADDR16(y) + (x<<1);
@@ -1050,7 +1051,7 @@ void NanoCanvasOps<16>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, l
                     m_buf[addr] = 0x00;
                     m_buf[addr+1] = 0x00;
                 }
-                addr += ((lcduint_t)m_w << 1);
+                addr += ((unsigned int)m_w << 1);
             }
             bitmap++;
         }
@@ -1062,16 +1063,16 @@ void NanoCanvasOps<16>::drawBitmap1(lcdint_t xpos, lcdint_t ypos, lcduint_t w, l
 }
 
 template <>
-void NanoCanvasOps<16>::drawBitmap8(lcdint_t xpos, lcdint_t ypos, lcduint_t w, lcduint_t h, const uint8_t *bitmap)
+void NanoCanvasOps<16>::drawBitmap8(int xpos, int ypos, unsigned int w, unsigned int h, const uint8_t *bitmap)
 {
     /* calculate char rectangle */
-    lcdint_t x1 = xpos - offset.x;
-    lcdint_t y1 = ypos - offset.y;
-    lcdint_t x2 = x1 + (lcdint_t)w - 1;
-    lcdint_t y2 = y1 + (lcdint_t)h - 1;
+    int x1 = xpos - offset.x;
+    int y1 = ypos - offset.y;
+    int x2 = x1 + (int)w - 1;
+    int y2 = y1 + (int)h - 1;
     /* clip bitmap */
-    if ((x2 < 0) || (x1 >= (lcdint_t)m_w)) return;
-    if ((y2 < 0) || (y1 >= (lcdint_t)m_h)) return;
+    if ((x2 < 0) || (x1 >= (int)m_w)) return;
+    if ((y2 < 0) || (y1 >= (int)m_h)) return;
 
     if (x1 < 0)
     {
@@ -1080,21 +1081,21 @@ void NanoCanvasOps<16>::drawBitmap8(lcdint_t xpos, lcdint_t ypos, lcduint_t w, l
     }
     if (y1 < 0)
     {
-        bitmap += (lcduint_t)(-y1) * w;
+        bitmap += (unsigned int)(-y1) * w;
         y1 = 0;
     }
-    if (y2 >= (lcdint_t)m_h)
+    if (y2 >= (int)m_h)
     {
-         y2 = (lcdint_t)m_h - 1;
+         y2 = (int)m_h - 1;
     }
-    if (x2 >= (lcdint_t)m_w)
+    if (x2 >= (int)m_w)
     {
-         x2 = (lcdint_t)m_w - 1;
+         x2 = (int)m_w - 1;
     }
-    lcdint_t y = y1;
+    int y = y1;
     while ( y <= y2 )
     {
-        for ( lcdint_t x = x1; x <= x2; x++ )
+        for ( int x = x1; x <= x2; x++ )
         {
             uint8_t data = pgm_read_byte( bitmap );
             if ( (data) || (!(m_textMode & CANVAS_MODE_TRANSPARENT)) )
@@ -1118,7 +1119,7 @@ void NanoCanvasOps<16>::clear()
 }
 
 template <>
-void NanoCanvasOps<16>::begin(lcdint_t w, lcdint_t h, uint8_t *bytes)
+void NanoCanvasOps<16>::begin(int w, int h, uint8_t *bytes)
 {
     m_w = w;
     m_h = h;

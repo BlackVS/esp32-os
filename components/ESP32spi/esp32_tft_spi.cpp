@@ -154,7 +154,7 @@ static const uint8_t ST7735_80x160x16_INIT[] =
 #undef TAG
 #define TAG "SPITFT"
 
-ESP32_SPI_TFT::ESP32_SPI_TFT(ESP32_SPIdevice& dev, uint width, uint height, uint ofs_x, uint ofs_y, 
+ESP32_SPI_TFT::ESP32_SPI_TFT(ESP32_SPIdevice& dev, unsigned int width, unsigned int height, unsigned int ofs_x, unsigned int ofs_y, 
       TFT_ROTATION display_rotation, 
       TFT_TYPE display_type)
  : m_device(dev),
@@ -248,11 +248,17 @@ esp_err_t ESP32_SPI_TFT::init()
 }
 
 
-void ESP32_SPI_TFT::startBlock(uint x1, uint y, uint w)
+void ESP32_SPI_TFT::send(uint8_t data)
+{
+    m_device.write_byte(data, true);
+}
+
+
+void ESP32_SPI_TFT::startBlock(unsigned int x1, unsigned int y, unsigned int w)
 {
     //SPI_LOGD(TAGSPI,"%s", __FUNCTION__);
     
-    uint x2 = w ? (x1 + w - 1) : ( m_width - 1);
+    unsigned int x2 = w ? (x1 + w - 1) : ( m_width - 1);
     x2 = (x2 < m_width) ? x2 : (m_width-1);
 
     //X
@@ -297,7 +303,7 @@ void ESP32_SPI_TFT::_set_rotation()
     //if ((rotation^m_display_rotation) & 0x01) - in the case of outer call
     if (m_display_rotation & 0x01) //first time
     {
-        uint t;
+        unsigned int t;
         //SWAP(m_offset_x, m_offset_y);
         t=m_offset_x; m_offset_x=m_offset_y; m_offset_y=t;
         //SWAP(m_width, m_height);
@@ -322,3 +328,10 @@ void ESP32_SPI_TFT::_set_rotation()
     if(m_base)
       m_base->on_rotation_changed();
 }
+
+
+  void ESP32_SPI_TFT::set_notify_base(ESP32_TFT_Notifications* base)
+  {
+      m_base=base;
+      //printf("PTR: %p (set_notify_base)\n", base);
+  }

@@ -6,13 +6,13 @@
 //OPS = NanoDisplayOps1..NanoDisplayOps16
 //INT = ESP32_SPI_TFT, ESP32_I2C_TFT
 
-template <class OPS, class INT>
-class ESP32_Display: public NanoDisplayOps<OPS>,
+template <uint8_t BPP, class INT>
+class ESP32_Display: public NanoDisplayOps<BPP>,
                      public ESP32_TFT_Notifications
 {
 public:
     ESP32_Display( INT& tft ) 
-        : NanoDisplayOps<OPS>(tft),
+        : NanoDisplayOps<BPP>(tft),
           m_tft(tft)
     {
         //tft.set_notify_base(this);
@@ -40,6 +40,10 @@ public:
             this->m_w=m_tft.width();
             this->m_h=m_tft.height();
     }
+
+public:
+    //direct TFT control, be carefull!!
+    INT& tft() {return m_tft;}
 
 private:
     INT& m_tft;

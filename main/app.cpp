@@ -29,7 +29,7 @@ void app_main()
   board.init();
 
   //run board specific threads
-  board.run();
+  board_run();
 
   //common for all boards tasks
   console_task(NULL);

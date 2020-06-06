@@ -72,7 +72,7 @@ public:
      * @param h - height
      * @param bytes - pointer to memory buffer to use
      */
-    NanoCanvasOps(lcdint_t w, lcdint_t h, uint8_t *bytes)
+    NanoCanvasOps(int w, int h, uint8_t *bytes)
     {
         begin(w, h, bytes);
     }
@@ -87,14 +87,14 @@ public:
      * @param h - height
      * @param bytes - pointer to memory buffer to use
      */
-    void begin(lcdint_t w, lcdint_t h, uint8_t *bytes);
+    void begin(int w, int h, uint8_t *bytes);
 
     /**
      * Sets offset
      * @param ox - X offset in pixels
      * @param oy - Y offset in pixels
      */
-    void setOffset(lcdint_t ox, lcdint_t oy) { offset.x = ox; offset.y = oy; };
+    void setOffset(int ox, int oy) { offset.x = ox; offset.y = oy; };
 
     /**
      * Returns right-bottom point of the canvas in offset terms.
@@ -102,7 +102,7 @@ public:
      */
     const NanoPoint offsetEnd() const
     {
-        return offset + (NanoPoint){ (lcdint_t)(m_w-1), (lcdint_t)(m_h-1) };
+        return offset + (NanoPoint){ (int)(m_w-1), (int)(m_h-1) };
     }
 
     /**
@@ -120,7 +120,7 @@ public:
      * @param y - position Y
      * @note color can be set via setColor()
      */
-    void putPixel(lcdint_t x, lcdint_t y);
+    void putPixel(int x, int y);
 
     /**
      * Draws pixel on specified position
@@ -136,7 +136,7 @@ public:
      * @param y2 - position Y
      * @note color can be set via setColor()
      */
-    void drawVLine(lcdint_t x1, lcdint_t y1, lcdint_t y2);
+    void drawVLine(int x1, int y1, int y2);
 
     /**
      * Draws horizontal or vertical line
@@ -145,7 +145,7 @@ public:
      * @param x2 - position X
      * @note color can be set via setColor()
      */
-    void drawHLine(lcdint_t x1, lcdint_t y1, lcdint_t x2);
+    void drawHLine(int x1, int y1, int x2);
 
     /**
      * Draws line
@@ -155,7 +155,7 @@ public:
      * @param y2 - position Y
      * @note color can be set via setColor()
      */
-    void drawLine(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2);
+    void drawLine(int x1, int y1, int x2, int y2);
 
     /**
      * Draws line
@@ -172,7 +172,7 @@ public:
      * @param y2 - position Y
      * @note color can be set via setColor()
      */
-    void drawRect(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2) __attribute__ ((noinline));
+    void drawRect(int x1, int y1, int x2, int y2) __attribute__ ((noinline));
 
     /**
      * Draws rectangle
@@ -189,7 +189,7 @@ public:
      * @param y2 - position Y
      * @note color can be set via setColor()
      */
-    void fillRect(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2) __attribute__ ((noinline));
+    void fillRect(int x1, int y1, int x2, int y2) __attribute__ ((noinline));
 
     /**
      * Fills rectangle area
@@ -212,7 +212,7 @@ public:
      *       In transparent mode, those pixels of source monochrome image, which are black, do not overwrite pixels
      *       in the screen buffer.
      */
-    void drawBitmap1(lcdint_t x, lcdint_t y, lcduint_t w, lcduint_t h, const uint8_t *bitmap) __attribute__ ((noinline));
+    void drawBitmap1(int x, int y, unsigned int w, unsigned int h, const uint8_t *bitmap) __attribute__ ((noinline));
 
     /**
      * @brief Draws 8-bit color bitmap in color buffer.
@@ -223,7 +223,7 @@ public:
      * @param h - height in pixels
      * @param bitmap - 8-bit color bitmap data, located in flash
      */
-    void drawBitmap8(lcdint_t x, lcdint_t y, lcduint_t w, lcduint_t h, const uint8_t *bitmap) __attribute__ ((noinline));
+    void drawBitmap8(int x, int y, unsigned int w, unsigned int h, const uint8_t *bitmap) __attribute__ ((noinline));
 
     /**
      * Clears canvas
@@ -253,7 +253,7 @@ public:
      *
      * @note Supports only STYLE_NORMAL and STYLE_BOLD
      */
-    void printFixed(lcdint_t xpos, lcdint_t y, const char *ch, EFontStyle style = STYLE_NORMAL) __attribute__ ((noinline));
+    void printFixed(int xpos, int y, const char *ch, EFontStyle style = STYLE_NORMAL) __attribute__ ((noinline));
 
     /**
      * Print text at specified position to canvas
@@ -265,7 +265,7 @@ public:
      *
      * @note Supports only STYLE_NORMAL and STYLE_BOLD
      */
-    void printFixedPgm(lcdint_t xpos, lcdint_t y, const char *ch, EFontStyle style = STYLE_NORMAL);
+    void printFixedPgm(int xpos, int y, const char *ch, EFontStyle style = STYLE_NORMAL);
 
     /**
      * @brief Sets canvas drawing mode
@@ -334,16 +334,16 @@ public:
     uint8_t * getData() { return m_buf; }
 
     /** Returns canvas width in pixels */
-    lcduint_t width() { return m_w; }
+    unsigned int width() { return m_w; }
 
     /** Returns canvas height in pixels */
-    lcduint_t height() { return m_h; }
+    unsigned int height() { return m_h; }
 
 protected:
-    lcduint_t m_w;    ///< width of NanoCanvas area in pixels
-    lcduint_t m_h;    ///< height of NanoCanvas area in pixels
-    lcdint_t  m_cursorX;  ///< current X cursor position for text output
-    lcdint_t  m_cursorY;  ///< current Y cursor position for text output
+    unsigned int m_w;    ///< width of NanoCanvas area in pixels
+    unsigned int m_h;    ///< height of NanoCanvas area in pixels
+    int  m_cursorX;  ///< current X cursor position for text output
+    int  m_cursorY;  ///< current Y cursor position for text output
     uint8_t   m_textMode; ///< Flags for current NanoCanvas mode
     EFontStyle   m_fontStyle; ///< currently active font style
     uint8_t * m_buf;      ///< Canvas data
@@ -366,7 +366,7 @@ public:
  * template parameters are: width, height and bits per pixels.
  * If object is defined locally, the pixels buffer is located in stack
  */
-template <lcduint_t W, lcduint_t H, uint8_t BPP>
+template <unsigned int W, unsigned int H, uint8_t BPP>
 class NanoCanvas: public NanoCanvasBase<BPP>
 {
 public:

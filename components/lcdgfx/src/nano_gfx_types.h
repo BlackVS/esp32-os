@@ -28,7 +28,7 @@
 #ifndef _NANO_GFX_TYPES_H_
 #define _NANO_GFX_TYPES_H_
 
-#include "lcd_hal/io.h"
+#include "platform.h"
 #include "canvas/canvas_types.h"
 
 #ifndef min
@@ -76,7 +76,6 @@ typedef struct SPRITE
     /// Pointer to PROGMEM data, representing sprite image
     const uint8_t * data;
 
-#ifdef __cplusplus
     /**
      * Updates active position of the sprite (doesn't redraw it)
      * @param x - horizontal position
@@ -170,7 +169,6 @@ typedef struct SPRITE
         if ( top > bottom ) top = 0;
         return (SSD1306_RECT){ left, top, right, bottom };
     };
-#endif
 } SPRITE;
 
 // ----------------------------------------------------------------------------

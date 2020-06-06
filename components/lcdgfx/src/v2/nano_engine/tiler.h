@@ -30,8 +30,8 @@
 
 #include "canvas/rect.h"
 #include "canvas/canvas.h"
-#include "v2/lcd/base/display.h"
-
+#include "v2/lcd/display.h"
+#include <cstring>
 /**
  * @ingroup NANO_ENGINE_API_V2
  * @{
@@ -220,7 +220,7 @@ public:
      * Mark specified area in pixels for redrawing by NanoEngine.
      * Actual update will take place in display() method.
      */
-    void refresh(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2) __attribute__ ((noinline))
+    void refresh(int x1, int y1, int x2, int y2) __attribute__ ((noinline))
     {
         if (y2 < 0 || x2 < 0) return;
         if (y1 < 0) y1 = 0;
@@ -251,7 +251,7 @@ public:
      * global (World) coordinates. If engine offset is (0,0), then this function
      * refreshes the same area as refresh().
      */
-    void refreshWorld(lcdint_t x1, lcdint_t y1, lcdint_t x2, lcdint_t y2) __attribute__ ((noinline))
+    void refreshWorld(int x1, int y1, int x2, int y2) __attribute__ ((noinline))
     {
         refresh(x1 - offset.x, y1 - offset.y, x2 - offset.x, y2 - offset.y);
     }
@@ -468,12 +468,12 @@ template<class C, class D>
 void NanoEngineTiler<C,D>::displayBuffer()
 {
 //    printf("--------------\n");
-    for (lcduint_t y = 0; y < m_display.height(); y = y + canvas.height())
+    for (unsigned int y = 0; y < m_display.height(); y = y + canvas.height())
     {
         uint16_t flag = m_refreshFlags[y/canvas.height()];
         m_refreshFlags[y/canvas.height()] = 0;
 //        printf("|%d%d%d%d%d%d%d%d|\n", flag & 1, (flag >> 1) & 1, (flag >> 2) & 1, (flag >> 3) & 1, (flag >> 4) & 1, (flag >> 5) & 1,(flag >> 6) & 1,(flag >> 7) & 1 );
-        for (lcduint_t x = 0; x < m_display.width(); x = x + canvas.width())
+        for (unsigned int x = 0; x < m_display.width(); x = x + canvas.width())
         {
             if (flag & 0x01)
             {
@@ -500,14 +500,14 @@ void NanoEngineTiler<C,D>::displayPopup(const char *msg)
 {
     NanoRect rect = { {8, (m_display.height()>>1) - 8}, {m_display.width() - 8, (m_display.height()>>1) + 8} };
     // TODO: It would be nice to calculate message height
-    NanoPoint textPos = { (m_display.width() - (lcdint_t)strlen(msg)*m_display.getFont().getHeader().width) >> 1,
+    NanoPoint textPos = { (m_display.width() - (int)strlen(msg)*m_display.getFont().getHeader().width) >> 1,
                                                (m_display.height()>>1) - 4 };
     refresh(rect);
-    for (lcduint_t y = 0; y < m_display.height(); y = y + canvas.height())
+    for (unsigned int y = 0; y < m_display.height(); y = y + canvas.height())
     {
         uint16_t flag = m_refreshFlags[y/canvas.height()];
         m_refreshFlags[y/canvas.height()] = 0;
-        for (lcduint_t x = 0; x < m_display.width(); x = x + canvas.width())
+        for (unsigned int x = 0; x < m_display.width(); x = x + canvas.width())
         {
             if (flag & 0x01)
             {

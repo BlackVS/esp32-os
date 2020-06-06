@@ -31,7 +31,7 @@
 #include "canvas/point.h"
 #include "canvas/rect.h"
 #include "object.h"
-#include "lcd_hal/io.h"
+#include "platform.h"
 
 /**
  * @ingroup NANO_ENGINE_API_V2
@@ -181,10 +181,10 @@ private:
     void updateMenuItemsPosition() override
     {
         NanoObject<T> *p = this->getNext();
-        lcdint_t y_pos = this->m_rect.p1.y + 4;
+        int y_pos = this->m_rect.p1.y + 4;
         while (p)
         {
-            p->setPos( { (lcdint_t)(this->m_rect.p1.x + 4), y_pos } );
+            p->setPos( { (int)(this->m_rect.p1.x + 4), y_pos } );
             y_pos += p->height() + 1;
             p = this->getNext( p );
         }
@@ -229,11 +229,11 @@ private:
     void updateMenuItemsPosition() override
     {
         NanoObject<T> *p = this->getNext();
-        lcdint_t y_pos = this->m_rect.p1.y + 4;
+        int y_pos = this->m_rect.p1.y + 4;
         while (p)
         {
-            p->setPos( { (lcdint_t)(this->m_rect.p1.x + 4), y_pos } );
-            p->setSize( { (lcdint_t)(this->m_rect.width() - 8), p->height() } );
+            p->setPos( { (int)(this->m_rect.p1.x + 4), y_pos } );
+            p->setSize( { (int)(this->m_rect.width() - 8), p->height() } );
             y_pos += p->height() + 1;
             p = this->getNext( p );
         }

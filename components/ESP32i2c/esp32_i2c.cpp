@@ -31,7 +31,7 @@ esp_err_t ESP32_I2Cdevice::begin()
     return m_port.begin();
 }
 
-esp_err_t ESP32_I2Cdevice::reset(uint delayMs)
+esp_err_t ESP32_I2Cdevice::reset(unsigned int delayMs)
 {
     if ( m_pin_reset >= 0 )
     {
@@ -64,7 +64,7 @@ void ESP32_I2Cdevice::write_byte (uint8_t  data)
     m_port.send(data);
 }
 
-void ESP32_I2Cdevice::write_bytes(const uint8_t* buf, uint buflen)
+void ESP32_I2Cdevice::write_bytes(const uint8_t* buf, unsigned int buflen)
 {
     m_port.sendBuffer(buf, buflen);
 }
@@ -74,75 +74,3 @@ void ESP32_I2Cdevice::stop()
     m_port.stop();
 }
 
-
-// template <class I>
-// void InterfaceSSD1306<I>::setStartLine(uint8_t line)
-// {
-//     m_startLine = line;
-//     commandStart();
-//     this->send( 0x40 | (line & 0x3F) ); // start line
-//     this->stop();
-// }
-
-// template <class I>
-// uint8_t InterfaceSSD1306<I>::getStartLine()
-// {
-//     return m_startLine;
-// }
-
-// template <class I>
-// void InterfaceSSD1306<I>::normalMode()
-// {
-//     commandStart();
-//     this->send(0xA6); // Normal display
-//     this->stop();
-// }
-
-// template <class I>
-// void InterfaceSSD1306<I>::invertMode()
-// {
-//     commandStart();
-//     this->send(0xA7); // Invert display
-//     this->stop();
-// }
-
-// template <class I>
-// void InterfaceSSD1306<I>::setContrast(uint8_t contrast)
-// {
-//     commandStart();
-//     this->send(0x81); // set contrast
-//     this->send(contrast);
-//     this->stop();
-// }
-
-// template <class I>
-// void InterfaceSSD1306<I>::displayOff()
-// {
-//     commandStart();
-//     this->send(0xAE); // display off
-//     this->stop();
-// }
-
-// template <class I>
-// void InterfaceSSD1306<I>::displayOn()
-// {
-//     commandStart();
-//     this->send(0xAF); // display on
-//     this->stop();
-// }
-
-// template <class I>
-// void InterfaceSSD1306<I>::flipHorizontal(uint8_t mode)
-// {
-//     commandStart();
-//     this->send( 0xA0 | (mode ? 0x00: 0x01 ) ); // seg remap
-//     this->stop();
-// }
-
-// template <class I>
-// void InterfaceSSD1306<I>::flipVertical(uint8_t mode)
-// {
-//     commandStart();
-//     this->send( mode ? 0xC0 : 0xC8 );
-//     this->stop();
-// }

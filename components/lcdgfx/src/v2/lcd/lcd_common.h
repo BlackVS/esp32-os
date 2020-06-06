@@ -28,11 +28,8 @@
 #ifndef _LCD_COMMON_V2_H_
 #define _LCD_COMMON_V2_H_
 
-#include "lcd_hal/io.h"
+#include "platform.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
  * @defgroup LCD_INTERFACE_API_V2 OLEDs: initialization and service functions
@@ -54,17 +51,9 @@ extern "C" {
  * @param rstPin reset pin number. If -1, then reset will not be performed
  * @param delayMs delay in milliseconds to hold rstPin in low state
  */
-void ssd1306_resetController2(int8_t rstPin, uint8_t delayMs);
+//void ssd1306_resetController2(int8_t rstPin, uint8_t delayMs);
 
 
 
-
-/**
- * @}
- */
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* _LCD_COMMON_V2_H_ */

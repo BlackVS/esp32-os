@@ -36,7 +36,7 @@
 #else
 #endif
 
-#include <stdint.h>
+#include <cstdint>
 #include <stddef.h>
 
 /** Flag means that more chars are required to decode utf-8 */
@@ -73,18 +73,26 @@
                                ((uint16_t)(c >> 6) & 0b00011100) | \
                                ((uint16_t)(c >> 3) & 0b00000011) )
 
-#if defined(__AVR_ATtiny25__) || defined(__AVR_ATtiny45__) || defined(__AVR_ATtiny85__) || \
-    defined(__AVR_ATtiny24__) || defined(__AVR_ATtiny44__) || defined(__AVR_ATtiny84__)
-/** internal int type, used by the library. Important for uC with low SRAM */
-typedef int8_t lcdint_t;
-/** internal int type, used by the library. Important for uC with low SRAM */
-typedef uint8_t lcduint_t;
-#else
-/** internal int type, used by the library. Important for uC with low SRAM */
-typedef int lcdint_t;
-/** internal int type, used by the library. Important for uC with low SRAM */
-typedef unsigned int lcduint_t;
-#endif
+
+constexpr uint16_t RGB16_BLACK      = 0x0000;      /*   0,   0,   0 */
+constexpr uint16_t RGB16_NAVY       = 0x000F;      /*   0,   0, 128 */
+constexpr uint16_t RGB16_DARKGREEN  = 0x03E0;      /*   0, 128,   0 */
+constexpr uint16_t RGB16_DARKCYAN   = 0x03EF;      /*   0, 128, 128 */
+constexpr uint16_t RGB16_MAROON     = 0x7800;      /* 128,   0,   0 */
+constexpr uint16_t RGB16_PURPLE     = 0x780F;      /* 128,   0, 128 */
+constexpr uint16_t RGB16_OLIVE      = 0x7BE0;      /* 128, 128,   0 */
+constexpr uint16_t RGB16_LIGHTGREY  = 0xC618;      /* 192, 192, 192 */
+constexpr uint16_t RGB16_DARKGREY   = 0x7BEF;      /* 128, 128, 128 */
+constexpr uint16_t RGB16_BLUE       = 0x001F;      /*   0,   0, 255 */
+constexpr uint16_t RGB16_GREEN      = 0x07E0;      /*   0, 255,   0 */
+constexpr uint16_t RGB16_CYAN       = 0x07FF;      /*   0, 255, 255 */
+constexpr uint16_t RGB16_RED        = 0xF800;      /* 255,   0,   0 */
+constexpr uint16_t RGB16_MAGENTA    = 0xF81F;      /* 255,   0, 255 */
+constexpr uint16_t RGB16_YELLOW     = 0xFFE0;      /* 255, 255,   0 */
+constexpr uint16_t RGB16_WHITE      = 0xFFFF;      /* 255, 255, 255 */
+constexpr uint16_t RGB16_ORANGE     = 0xFD20;      /* 255, 165,   0 */
+constexpr uint16_t RGB16_GREENYELLOW= 0xAFE5;      /* 173, 255,  47 */
+constexpr uint16_t RGB16_PINK       = 0xF81F;
 
 /** Supported font styles */
 typedef enum
@@ -164,12 +172,12 @@ typedef struct
     /// position of menu scrolling. Internally updated
     uint8_t     scrollPosition;
     /// top offset
-    lcdint_t    top;
+    int    top;
     /// left offset
-    lcdint_t    left;
+    int    left;
     /// width of menu
-    lcduint_t   width;
+    unsigned int   width;
     /// height of menu
-    lcduint_t   height;
+    unsigned int   height;
 } SAppMenu;
 

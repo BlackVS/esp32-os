@@ -1,7 +1,7 @@
 #pragma once
 
 
-__attribute__ ((unused)) const PROGMEM uint8_t heartImage[8] =
+__attribute__ ((unused)) const uint8_t heartImage[8] =
 {
     0B00001110,
     0B00011111,

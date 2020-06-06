@@ -100,8 +100,8 @@ public:
      *
      * Function returns char data for currently set font: pointer to progmem
      * data for specified char, and width, height of the char. You can use these
-     * data to draw char manually using NanoDisplayOps1::drawBitmap1(),
-     * NanoDisplayOps8::drawBitmap1(), NanoDisplayOps16::drawBitmap1()
+     * data to draw char manually using NanoDisplayOpsX<1>::drawBitmap1(),
+     * NanoDisplayOpsX<8>::drawBitmap1(), NanoDisplayOpsX<16>::drawBitmap1()
      * or NanoCanvasOps::drawBitmap1().
      *
      * @param ch char to read from set font
@@ -116,10 +116,10 @@ public:
      *
      * Returns text width in pixels (and its height if height is requested)
      * @param text pointer to null-terminated string
-     * @param height pointer to lcduint_t variable to store height to. nullptr if
+     * @param height pointer to unsigned int variable to store height to. nullptr if
      *        height is not required
      */
-    lcduint_t getTextSize(const char *text, lcduint_t *height = nullptr);
+    unsigned int getTextSize(const char *text, unsigned int *height = nullptr);
 
     /**
      * Returns 16-bit unicode char, encoded in utf8

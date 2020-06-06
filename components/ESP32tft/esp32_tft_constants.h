@@ -118,13 +118,34 @@ typedef enum {
 
 
 //https://exploreembedded.com/wiki/OLED_Interface_With_8051
+//https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf
 #define SSD1306_COMMAND             0x00		//This command is used to indicate the next data byte is acted as a command.
-#define SSD1306_DATA_CONTINUE       0x40		//This command sets the Display Start Line register to determine starting address of display RAM
-#define SSD1306_DISPLAY_OFF         0xAE		//This command is used to turn OFF the OLED display panel.
-#define SSD1306_DISPLAY_ON          0xAF		//This command is used to turn ON the OLED display panel.
 #define SSD1306_MEMORY_ADDR_MODE    0x20		//If horizontal address increment mode is enabled by command 20h, after finishing read/write one column data, it is incremented automatically to the next column address.
 #define SSD1306_SET_COLUMN_ADDR     0x21		//This command is used to define the current read/write column address in graphic display data RAM.
 #define SSD1306_SET_PAGE_ADDR       0x22		//This command is used to define the current read/write Line(Page as per data sheet) address in graphic display data RAM.
-#define SET_CONTRAST_CONTROL        0x81		//This command sets the Contrast Setting of the display. The chip has 256 contrast steps from 00h to FFh. The segment output current increases as the contrast step value increases.
+#define SSD1306_SETSTARTLINE        0x40
+#define SSD1306_SETCONTRAST         0x81		//This command sets the Contrast Setting of the display. The chip has 256 contrast steps from 00h to FFh. The segment output current increases as the contrast step value increases.
+#define SSD1306_CHARGEPUMP          0x8D
+#define SSD1306_SEGREMAP            0xA0
+#define SSD1306_DISPLAYALLON_RESUME 0xA4
+#define SSD1306_DISPLAYALLON        0xA5
 #define SSD1306_NORMAL_DISPLAY      0xA6		//This command sets the display to normal mode. In normal display a RAM data of 1 indicates an “ON” pixel.
 #define SSD1306_INVERT_DISPLAY      0xA7		//This command sets the display to inverse mode. In normal display a RAM data of 0 indicates an “ON” pixel.
+#define SSD1306_SETMULTIPLEX        0xA8
+#define SSD1306_DISPLAY_OFF         0xAE		//This command is used to turn OFF the OLED display panel.
+#define SSD1306_DISPLAY_ON          0xAF		//This command is used to turn ON the OLED display panel.
+#define SSD1306_COMSCANINC          0xC0        //normal mode (RESET) Scan fromCOM0 to COM[N –1] 
+#define SSD1306_COMSCANDEC          0xC8        //remapped mode. Scan from COM[N-1] to COM0 
+#define SSD1306_SETDISPLAYOFFSET    0xD3
+#define SSD1306_SETDISPLAYCLOCKDIV  0xD5
+#define SSD1306_SETPRECHARGE        0xD9
+#define SSD1306_SETCOMPINS          0xDA
+#define SSD1306_SETVCOMDETECT       0xDB
+
+
+#define SSD1306_DATA_CONTINUE       0x40		//This command sets the Display Start Line register to determine starting address of display RAM
+
+#define SSD1306_SETLOWCOLUMN    0x00
+#define SSD1306_SETHIGHCOLUMN   0x10
+
+

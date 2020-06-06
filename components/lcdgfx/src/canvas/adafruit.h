@@ -34,7 +34,7 @@
  */
 #pragma once
 
-#include "lcd_hal/io.h"
+#include "platform.h"
 
 #if defined(CONFIG_ADAFRUIT_GFX_ENABLE)
 
@@ -82,7 +82,7 @@ public:
      *
      * @note the size of buffer must be enough to store (w*h*bpp/8) bytes.
      */
-    AdafruitCanvasOps(lcduint_t w, lcduint_t h, uint8_t *buffer)
+    AdafruitCanvasOps(unsigned int w, unsigned int h, uint8_t *buffer)
         : Adafruit_GFX(w, h)
         , offset{0}
         , m_buffer(buffer)
@@ -104,7 +104,7 @@ public:
      * @param ox - X offset in pixels
      * @param oy - Y offset in pixels
      */
-    void setOffset(lcdint_t ox, lcdint_t oy) { offset.x = ox; offset.y = oy; };
+    void setOffset(int ox, int oy) { offset.x = ox; offset.y = oy; };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
     // We need to override Adafruit GFX implementation of fillScreen, because
@@ -155,7 +155,7 @@ public:
      * @param x - horizontal position in pixels
      * @param y - vertical position in blocks (pixels/8)
      */
-    virtual void blt(lcdint_t x, lcdint_t y) = 0;
+    virtual void blt(int x, int y) = 0;
 
     /**
      * Draws canvas on the LCD display using offset values.

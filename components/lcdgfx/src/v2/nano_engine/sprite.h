@@ -31,7 +31,7 @@
 #include "canvas/point.h"
 #include "canvas/rect.h"
 #include "object.h"
-#include "lcd_hal/io.h"
+#include "platform.h"
 
 /**
  * @ingroup NANO_ENGINE_API_V2

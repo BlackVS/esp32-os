@@ -29,15 +29,6 @@
 
 #include "canvas/canvas_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * @defgroup LCD_FONTS FONTS: Supported LCD fonts
- * @{
- */
-
 /** Standard ASCII 6x8 font */
 extern const PROGMEM uint8_t ssd1306xled_font6x8 [];
 
@@ -86,12 +77,3 @@ extern const PROGMEM uint8_t courier_new_font11x16_digits [];
  * @warning can be used only with ssd1306_printFixed() and ssd1306_setFixedFont() functions.
  */
 extern const PROGMEM uint8_t comic_sans_font24x32_123 [];
-
-/**
- * @}
- */
-
-#ifdef __cplusplus
-}
-#endif
-

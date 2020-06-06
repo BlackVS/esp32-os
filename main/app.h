@@ -49,15 +49,12 @@ extern "C" {
 //general toolkits
 #include "I2Cbus.hpp"
 //#include "esp32_tft.h"
-#include "lcdgfx.h"
+//#include "lcdgfx.h"
 #include "esp32_wifi.h"
 
 //hardware
 #include "vfs.h"
-#include "mpu_task.h"
-#include "touch_button.h"
-#include "led_strip.h"
-#include "nvs_settings.h"
+#include "hardware/nvs_settings.h"
 
 //resource
 #include "resources.h"
@@ -68,11 +65,8 @@ extern "C" {
 //
 #include "utils.h"
 
-
 //general for all boards tasks
-#include "leds.h"
-#include "leds_compass.h"
 #include "console.h"
-#include "oled.h"
 
-    
+//overloaded for each board type
+#include "board_config.h"

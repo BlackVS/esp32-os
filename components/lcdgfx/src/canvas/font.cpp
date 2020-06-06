@@ -304,9 +304,9 @@ void NanoFont::getCharBitmap(uint16_t ch, SCharInfo *info)
     m_getCharBitmap( m_fixedFont, ch, info );
 }
 
-lcduint_t NanoFont::getTextSize(const char *text, lcduint_t *height)
+unsigned int NanoFont::getTextSize(const char *text, unsigned int *height)
 {
-    lcduint_t width = 0;
+    unsigned int width = 0;
     while (*text)
     {
         if (*text == '\r' || *text == '\n')

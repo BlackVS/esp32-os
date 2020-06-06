@@ -20,14 +20,14 @@ class ESP32_I2Cdevice
         esp_err_t begin();
         //esp_err_t end();
 
-        esp_err_t reset(uint delayMs = 20);
+        esp_err_t reset(unsigned int delayMs = 20);
         
         // i2c communication
         void start_cmd();
         void start_data();
 
         void write_byte (uint8_t  data);  
-        void write_bytes(const uint8_t* buf, uint buflen);
+        void write_bytes(const uint8_t* buf, unsigned int buflen);
         
         //void start();
         void stop();

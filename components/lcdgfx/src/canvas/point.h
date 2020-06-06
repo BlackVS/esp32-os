@@ -40,11 +40,11 @@
 typedef struct _NanoPoint
 {
     /** x position in pixels */
-    lcdint_t x;
+    int x;
     /** y position in pixels */
-    lcdint_t y;
+    int y;
 
-//    _NanoPoint(lcdint_t px, lcdint_t py)
+//    _NanoPoint(int px, int py)
 //    {
 //        x = px;
 //        y = py;
@@ -55,7 +55,7 @@ typedef struct _NanoPoint
      * @param px - x position
      * @param py - y position
      */
-    void setPoint(lcdint_t px, lcdint_t py) { x=px; y=py; };
+    void setPoint(int px, int py) { x=px; y=py; };
 
     /**
      * Shifts right x,y value of the point by bits value.
@@ -107,8 +107,8 @@ typedef struct _NanoPoint
      */
     _NanoPoint operator-(const _NanoPoint &p)
     {
-        return { static_cast<lcdint_t>(x - p.x),
-                 static_cast<lcdint_t>(y - p.y) };
+        return { static_cast<int>(x - p.x),
+                 static_cast<int>(y - p.y) };
     };
 
     /**
@@ -117,8 +117,8 @@ typedef struct _NanoPoint
      */
     _NanoPoint operator+(const _NanoPoint &p)
     {
-        return { static_cast<lcdint_t>(x + p.x),
-                 static_cast<lcdint_t>(y + p.y) };
+        return { static_cast<int>(x + p.x),
+                 static_cast<int>(y + p.y) };
     };
 
     /**
@@ -127,8 +127,8 @@ typedef struct _NanoPoint
      */
     _NanoPoint operator>>(const uint8_t bits) const
     {
-        return { static_cast<lcdint_t>(x >> bits),
-                 static_cast<lcdint_t>(y >> bits) };
+        return { static_cast<int>(x >> bits),
+                 static_cast<int>(y >> bits) };
     };
 
     /**
@@ -137,8 +137,8 @@ typedef struct _NanoPoint
      */
     _NanoPoint operator<<(const uint8_t bits) const
     {
-        return { static_cast<lcdint_t>(x << bits),
-                 static_cast<lcdint_t>(y << bits) };
+        return { static_cast<int>(x << bits),
+                 static_cast<int>(y << bits) };
     };
 
     /**
@@ -147,8 +147,8 @@ typedef struct _NanoPoint
      */
     _NanoPoint operator/(const int16_t d) const
     {
-        return { static_cast<lcdint_t>(x / d),
-                 static_cast<lcdint_t>(y / d) };
+        return { static_cast<int>(x / d),
+                 static_cast<int>(y / d) };
     };
 
 } NanoPoint;
@@ -156,12 +156,12 @@ typedef struct _NanoPoint
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 inline NanoPoint operator+(const NanoPoint& p1, const NanoPoint& p2)
 {
-    return { (lcdint_t)(p1.x + p2.x), (lcdint_t)(p1.y + p2.y) };
+    return { (int)(p1.x + p2.x), (int)(p1.y + p2.y) };
 }
 
 inline NanoPoint operator-(const NanoPoint& p1, const NanoPoint& p2)
 {
-    return { (lcdint_t)(p1.x - p2.x), (lcdint_t)(p1.y - p2.y) };
+    return { (int)(p1.x - p2.x), (int)(p1.y - p2.y) };
 }
 
 inline bool operator==(const NanoPoint& p1, const NanoPoint& p2)

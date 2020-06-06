@@ -10,6 +10,12 @@
 
 #define USE_POLLING_TRANSMIT 1
 
+
+void spi_delay(unsigned long ms)
+{
+    vTaskDelay(ms / portTICK_PERIOD_MS);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 #undef TAG
 #define TAG "SPIBUS"
@@ -134,7 +140,7 @@ esp_err_t ESP32_SPIdevice::end()
     return ret;
 }
 
-esp_err_t ESP32_SPIdevice::reset(uint delayMs)
+esp_err_t ESP32_SPIdevice::reset(unsigned int delayMs)
 {
     //ESP_LOGD(TAG, "%s()", __FUNCTION__);
     gpio_set_direction( m_pin_reset, GPIO_MODE_OUTPUT );
@@ -196,7 +202,7 @@ esp_err_t ESP32_SPIdevice::flush_data()
     return ret;
 }
 
-esp_err_t ESP32_SPIdevice::write_bytes(const uint8_t* buf, uint buflen)
+esp_err_t ESP32_SPIdevice::write_bytes(const uint8_t* buf, unsigned int buflen)
 {
 	esp_err_t ret=ESP_OK;
     spi_transaction_t trans = {};
