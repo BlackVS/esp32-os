@@ -11,6 +11,8 @@
 #include "touch_button.h"
 
 typedef ESP32_Display<NanoDisplayOps1, ESP32_I2C_TFT> DISPLAY_TYPE;
+typedef NanoEngine1<DISPLAY_TYPE> NANO_ENGINE_TYPE;
+typedef NanoFixedSprite<NANO_ENGINE_TYPE::TilerT> NANO_SPRITE_TYPE;
 
 class CLEDStrip;
 class CTouchButton;

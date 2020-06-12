@@ -8,6 +8,7 @@ menu "MPU driver"
 # CONFIG_MPU6050
 # CONFIG_MPU6500
 # CONFIG_MPU6555
+# CONFIG_MPU6886
 # CONFIG_MPU9150
 # CONFIG_MPU9250
 # CONFIG_MPU9255
@@ -44,6 +45,8 @@ config MPU6500
     bool "MPU6500"
 config MPU6555
     bool "MPU6555"
+config MPU6886
+    bool "MPU6886"
 config MPU9150
     bool "MPU9150"
 config MPU9250
@@ -60,6 +63,7 @@ config MPU_CHIP_MODEL
     default "MPU6050" if MPU6050
     default "MPU6500" if MPU6500
     default "MPU6555" if MPU6555
+    default "MPU6886" if MPU6886
     default "MPU9150" if MPU9150
     default "MPU9250" if MPU9250
     default "MPU9255" if MPU9255
@@ -89,6 +93,7 @@ choice MPU_COMM_PROTOCOL
 
 config MPU_I2C
     bool "I2C"
+#    depends on MPU6886
     help
         Inter-Integrated Circuit (I2C)
         

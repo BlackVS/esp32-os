@@ -8,10 +8,13 @@
 #include "esp32_tft_spi.h"
 
 #include "esp32_mpu.h"
+#include "MPU6886.h"
 #include "AXP192.h"
 //#include "axp192.h"
 
 typedef ESP32_Display<16, ESP32_SPI_TFT> DISPLAY_TYPE;
+typedef NanoEngine16<DISPLAY_TYPE> NANO_ENGINE_TYPE;
+typedef NanoFixedSprite<NANO_ENGINE_TYPE::TilerT> NANO_SPRITE_TYPE;
 
 class Board_M5STICKC : public Board
 {

@@ -21,18 +21,11 @@
 
 class AXP192 
 {
-    gpio_num_t m_sda_io_num = {GPIO_NUM_NC};
-    gpio_num_t m_scl_io_num = {GPIO_NUM_NC};
-    uint32_t   m_clk_speed  = {100000};
-    uint32_t   m_addr       = {0};
-
-    I2C_t m_i2c;
+        I2C_t&      m_port;
+        uint16_t    m_dev_addr = {0};
 
 public:
-    AXP192( gpio_num_t sda_io_num, 
-            gpio_num_t scl_io_num,
-            uint32_t clk_speed, 
-            uint32_t addr);
+    AXP192( I2C_t& port, uint16_t dev_addr);
 
     /**
      * LDO2: Display backlight

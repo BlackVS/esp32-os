@@ -1,7 +1,9 @@
 #include "esp32_mpu.h"
 
-#include "esp_log.h"
-#include "esp_err.h"
+
+// #include "MPU.hpp"        // main file, provides the class itself
+//#include "mpu/math.hpp"   // math helper for dealing with MPU data
+// #include "mpu/types.hpp"  // MPU data types and definitions
 
 #define UNUSED __attribute__ ((unused)) 
 
@@ -69,6 +71,55 @@ int MPU_get(CMPUData& data)
 	return -1;	
 }
 
+
+
+uint8_t mpu_accelFSRvalue(const MPU_ACCEL_FS fs)
+{
+    return 2 << fs;
+}
+
+float mpu_accelResolution(const MPU_ACCEL_FS fs)
+{
+    return static_cast<float>(mpu_accelFSRvalue(fs)) / INT16_MAX;
+}
+
+MPU_AXES_FLOAT mpu_accelGravity(const MPU_AXES_RAW& raw_axes, const MPU_ACCEL_FS fs)
+{
+    MPU_AXES_FLOAT axes;
+    axes.x = raw_axes.x * mpu_accelResolution(fs);
+    axes.y = raw_axes.y * mpu_accelResolution(fs);
+    axes.z = raw_axes.z * mpu_accelResolution(fs);
+    return axes;
+}
+
+uint16_t mpu_gyroFSRvalue(const MPU_GYRO_FS fs)
+{
+    return 250 << fs;
+}
+
+float mpu_gyroResolution(const MPU_GYRO_FS fs)
+{
+    return static_cast<float>(mpu_gyroFSRvalue(fs)) / INT16_MAX;
+}
+
+
+float mpu_gyroDegPerSec(const int16_t axis, const MPU_GYRO_FS fs)
+{
+    return axis * mpu_gyroResolution(fs);
+}
+
+
+MPU_AXES_FLOAT mpu_gyroDegPerSec(const MPU_AXES_RAW& raw_axes, const MPU_GYRO_FS fs)
+{
+    MPU_AXES_FLOAT axes;
+    axes.x = raw_axes.x * mpu_gyroResolution(fs);
+    axes.y = raw_axes.y * mpu_gyroResolution(fs);
+    axes.z = raw_axes.z * mpu_gyroResolution(fs);
+    return axes;
+}
+
+
+
 void mpu_task_init(void) 
 {
 	ESP_LOGD(__FUNCTION__, "Starting...");
@@ -83,107 +134,4 @@ void mpu_task_finish(void)
 		vSemaphoreDelete(mpu_data_mutex);
 		mpu_data_mutex=NULL;
 	}
-}
-
-void mpu_task(void *pvParameters) 
-{
-	if(!pvParameters) {
-        ESP_LOGE(TAG, "Zero pointer instead MPU!");
-        vTaskDelete(NULL);
-        return;
-    }
-    MPU_t* MPU=(MPU_t*)pvParameters;
-
-    float roll{0}, pitch{0}, yaw{0};
-
-
-    // Great! Let's verify the communication
-    // (this also check if the connected MPU supports the implementation of chip selected in the component menu)
-    while (esp_err_t err = MPU->testConnection()) {
-        ESP_LOGE(TAG, "Failed to connect to the MPU, error=%#X", err);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
-    ESP_LOGI(TAG, "MPU connection successful!");
-
-    // Initialize
-    ESP_ERROR_CHECK(MPU->initialize());  // initialize the chip and set initial configurations
-    static constexpr mpud::gyro_fs_t kGyroFS   = mpud::GYRO_FS_500DPS;
-
-    // Setup with your configurations
-    // ESP_ERROR_CHECK(MPU.setSampleRate(50));  // set sample rate to 50 Hz
-    ESP_ERROR_CHECK(MPU->setGyroFullScale(kGyroFS));
-    // ESP_ERROR_CHECK(MPU.setAccelFullScale(mpud::ACCEL_FS_4G));
-
-
-	ESP_LOGD(TAG, "Init successful!");
-
-    // Reading sensor data
-    //printf("Reading sensor data:\n");
-    mpud::raw_axes_t accelRaw;   // x, y, z axes as int16
-    mpud::raw_axes_t gyroRaw;    // x, y, z axes as int16
-    mpud::float_axes_t accelG;   // accel axes in (g) gravity format
-    mpud::float_axes_t gyroDPS;  // gyro axes in (DPS) º/s format
-
-    const int msDelay = 100;
-    const TickType_t xDelay = msDelay / portTICK_PERIOD_MS;
-
-	while (1) {
-// Read
-        MPU->acceleration(&accelRaw);  // fetch raw data from the registers
-        MPU->rotation(&gyroRaw);       // fetch raw data from the registers
-        // MPU.motion(&accelRaw, &gyroRaw);  // read both in one shot
-        // Convert
-        accelG = mpud::accelGravity(accelRaw, mpud::ACCEL_FS_4G);
-        gyroDPS = mpud::gyroDegPerSec(gyroRaw, mpud::GYRO_FS_500DPS);
-
-        // Calculate tilt angle
-        // range: (roll[-180,180]  pitch[-90,90]  yaw[-180,180])
-        constexpr double kRadToDeg = 57.2957795131;
-        constexpr float kDeltaTime = float(msDelay) / 1000.f;
-        float gyroRoll             = roll + mpud::math::gyroDegPerSec(gyroRaw.x, kGyroFS) * kDeltaTime;
-        float gyroPitch            = pitch + mpud::math::gyroDegPerSec(gyroRaw.y, kGyroFS) * kDeltaTime;
-        float gyroYaw              = yaw + mpud::math::gyroDegPerSec(gyroRaw.z, kGyroFS) * kDeltaTime;
-        float accelRoll            = atan2(-accelRaw.x, accelRaw.z) * kRadToDeg;
-        float accelPitch = atan2(accelRaw.y, sqrt(accelRaw.x * accelRaw.x + accelRaw.z * accelRaw.z)) * kRadToDeg;
-        // Fusion
-        roll  = gyroRoll * 0.95f + accelRoll * 0.05f;
-        pitch = gyroPitch * 0.95f + accelPitch * 0.05f;
-        yaw   = gyroYaw;
-        // correct yaw
-        if (yaw > 180.f)
-            yaw -= 360.f;
-        else if (yaw < -180.f)
-            yaw += 360.f;
-
-		CMPUData data;
-		data.accelG[0]=accelG.x;
-		data.accelG[1]=accelG.y;
-		data.accelG[2]=accelG.z;
-		data.gyroDPS[0]=gyroDPS[0];
-		data.gyroDPS[1]=gyroDPS[1];
-		data.gyroDPS[2]=gyroDPS[2];
-		data.pitch=pitch;
-		data.roll=roll;
-		data.yaw=yaw;
-		data.empty=false;
-		MPU_set(data);
-
-        // Debug
-        //printf("accel: [%+6.2f %+6.2f %+6.2f ] (G) \t", accelG.x, accelG.y, accelG.z);
-        //printf("gyro: [%+7.2f %+7.2f %+7.2f ] (º/s)\t", gyroDPS[0], gyroDPS[1], gyroDPS[2]);
-        //printf("Pitch: %+6.1f \t Roll: %+6.1f \t Yaw: %+6.1f \n", pitch, roll, yaw);
-        
-        vTaskDelay(xDelay);
-	}
-    vTaskDelete(NULL);    
-}
-
-
-void mpu_init(MPU_t& MPU)
-{
-  mpu_task_init();
-
-  //MPU: reads sensora
-  xTaskCreate(&mpu_task , "MPU" , 4096, &MPU, 5, &mpu_task_handle);
-
 }

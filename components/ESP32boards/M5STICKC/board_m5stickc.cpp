@@ -6,6 +6,8 @@
 #include "esp32_wifi.h"
 #include "utils.h"
 
+#include "MPU.hpp" 
+
 #define	INTERVAL	100
 #define WAIT	vTaskDelay(INTERVAL)
 
@@ -31,26 +33,36 @@
 
 static const char *TAG = __FILE__;
 Board_M5STICKC board=Board_M5STICKC();
-//////////////////////////////////////////////////////////////////////////
 
-/// Board compomnents:
+//////////////////////////////////////////////////////////////////////////
+///// Board components:
+
+//i2c bus
+I2C_t i2c0 = i2cbus::I2C(I2C_NUM_0, M5STICKC::config::AXP192_SDA, M5STICKC::config::AXP192_SCL, M5STICKC::config::AXP192_CLK);
+
+//attach AXP to i2c 
+AXP192  axp(i2c0, M5STICKC::config::AXP192_ADDR);
+
+//Attached MPU to i2c0
+MPU_t MPU(i2c0, M5STICKC::config::MPU_I2C_ADDR); //More complex, supports few models of MPU, type of MPU set vis sdkconfig
+//MPU6886 MPU(i2c0, M5STICKC::config::MPU_I2C_ADDR); //Simpler, taken from M5StickC Arduino library
+
+//SPI bus
 //M5STICKC 27000000
 //                        Bus        MOSI/SDA     MISO         CLK/SCL
 ESP32_SPIbus 	spiBus(HSPI_HOST, GPIO_NUM_15, GPIO_NUM_NC, GPIO_NUM_13); //M5STICKC
 
+//SPI display device
 //                                   Reset        CS           DC
 ESP32_SPIdevice spiDevice(spiBus, GPIO_NUM_18, GPIO_NUM_5, GPIO_NUM_23, 40000000);
 
+//initialize SPI TFT
 //                                 W   H  ofsX ofsY
 ESP32_SPI_TFT   spiTFT(spiDevice, 80, 160, 26,  1,  TFT_ROTATION_90, TFT_ST7735_M5STICKC);
 
+//attach graphics engine to TFT
 DISPLAY_TYPE    display(spiTFT);
 
-
-//                           RST busID CS DC  freq       SCL SDA
-//DISPLAY_TYPE display(80, 160, 18, {0,  5, 23, 27000000,  13, 15,  0},   ST7735_M5STICKC); //M5STICKC
-//DISPLAY_TYPE display(18, {-1, 5, 23, 0, 13, 15});
-AXP192       axp(M5STICKC::config::AXP192_SDA, M5STICKC::config::AXP192_SCL, M5STICKC::config::AXP192_CLK, M5STICKC::config::AXP192_ADDR);
 
 
 Board_M5STICKC::Board_M5STICKC()
@@ -64,6 +76,8 @@ void Board_M5STICKC::init()
     ESP_LOGD(TAG,"%s: starting", __FUNCTION__);
     
     axp.init();
+    mpu_init(MPU);
+
 
     ESP_LOGD(__FUNCTION__, "Starting...");
     // Initialize I2C on port 0 using I2Cbus interface

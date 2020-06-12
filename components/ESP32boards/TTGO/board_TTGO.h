@@ -6,6 +6,8 @@
 #include "esp32_tft_spi.h"
 
 typedef ESP32_Display<16, ESP32_SPI_TFT> DISPLAY_TYPE;
+typedef NanoEngine16<DISPLAY_TYPE> NANO_ENGINE_TYPE;
+typedef NanoFixedSprite<NANO_ENGINE_TYPE::TilerT> NANO_SPRITE_TYPE;
 
 class Board_TTGO : public Board
 {

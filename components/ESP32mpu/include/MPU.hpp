@@ -29,6 +29,10 @@
 #include "esp_err.h"
 #include "sdkconfig.h"
 
+// #ifdef CONFIG_MPU6886
+//  #define CONFIG_NO_LP 1
+// #endif 
+
 #ifdef CONFIG_MPU_I2C
 #include "I2Cbus.hpp"
 #elif CONFIG_MPU_SPI
@@ -92,8 +96,10 @@ class MPU
     //! \name Power management
     //! \{
     esp_err_t setLowPowerAccelMode(bool enable);
+    #ifndef CONFIG_NO_LP
     esp_err_t setLowPowerAccelRate(lp_accel_rate_t rate);
     lp_accel_rate_t getLowPowerAccelRate();
+    #endif
     bool getLowPowerAccelMode();
     esp_err_t setStandbyMode(stby_en_t mask);
     stby_en_t getStandbyMode();
@@ -102,6 +108,10 @@ class MPU
     //! \{
     esp_err_t setGyroFullScale(gyro_fs_t fsr);
     esp_err_t setAccelFullScale(accel_fs_t fsr);
+
+    esp_err_t setGyroFullScale(int fsr) { return setGyroFullScale( (gyro_fs_t)fsr ); }
+    esp_err_t setAccelFullScale(int fsr) { return setAccelFullScale( (accel_fs_t)fsr ); }
+
     gyro_fs_t getGyroFullScale();
     accel_fs_t getAccelFullScale();
     //! \}
@@ -192,7 +202,7 @@ class MPU
     esp_err_t setFsyncEnabled(bool enable);
     int_lvl_t getFsyncConfig();
     bool getFsyncEnabled();
-#if defined CONFIG_MPU6500 || defined CONFIG_MPU9250
+#if defined CONFIG_MPU6500 || defined CONFIG_MPU9250 || defined CONFIG_MPU6886
     esp_err_t setFchoice(fchoice_t fchoice);
     fchoice_t getFchoice();
 #endif
@@ -216,11 +226,12 @@ class MPU
     //! \}
     //! \name Sensor readings
     //! \{
-    esp_err_t acceleration(raw_axes_t* accel);
-    esp_err_t acceleration(int16_t* x, int16_t* y, int16_t* z);
-    esp_err_t rotation(raw_axes_t* gyro);
-    esp_err_t rotation(int16_t* x, int16_t* y, int16_t* z);
-    esp_err_t temperature(int16_t* temp);
+    esp_err_t accelerationRaw(raw_axes_t* accel);
+    esp_err_t accelerationRaw(int16_t* x, int16_t* y, int16_t* z);
+    esp_err_t rotationRaw(raw_axes_t* gyro);
+    esp_err_t rotationRaw(int16_t* x, int16_t* y, int16_t* z);
+    esp_err_t temperatureRaw(int16_t* temp);  //raw
+    esp_err_t temperatureC(float* temp);  //celsius
     esp_err_t motion(raw_axes_t* accel, raw_axes_t* gyro);
 #if defined CONFIG_MPU_AK89xx
     esp_err_t heading(raw_axes_t* mag);

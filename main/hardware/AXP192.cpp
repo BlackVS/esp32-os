@@ -1,22 +1,16 @@
 #include "AXP192.h"
 
-AXP192::AXP192(gpio_num_t sda_io_num, 
-               gpio_num_t scl_io_num,
-               uint32_t clk_speed,
-               uint32_t addr)
- : m_sda_io_num(sda_io_num),
-   m_scl_io_num(scl_io_num),
-   m_clk_speed(clk_speed),
-   m_addr(addr),
-   m_i2c(I2C_NUM_0, sda_io_num, scl_io_num, clk_speed )
+AXP192::AXP192(I2C_t& port, uint16_t dev_addr)
+ : m_port(port),
+   m_dev_addr(dev_addr)
 {
    //m_i2c.setAddr(addr);
 }
 
 void AXP192::init(bool disableLDO2, bool disableLDO3, bool disableRTC, bool disableDCDC1, bool disableDCDC3)
 {
-    m_i2c.begin();
-
+    m_port.begin();
+    
     // Set LDO2 & LDO3(TFT_LED & TFT) 3.0V
     Write1Byte(0x28, 0xcc);
 
@@ -67,22 +61,13 @@ void AXP192::init(bool disableLDO2, bool disableLDO3, bool disableRTC, bool disa
 
 void AXP192::Write1Byte( uint8_t reg ,  uint8_t data )
 {
-    m_i2c.writeByte(m_addr, reg, data);
-    // Wire1.beginTransmission(0x34);
-    // Wire1.write(Addr);
-    // Wire1.write(Data);
-    // Wire1.endTransmission();
+    m_port.writeByte(m_dev_addr, reg, data);
 }
 
 uint8_t AXP192::Read8bit( uint8_t reg )
 {
-    // Wire1.beginTransmission(0x34);
-    // Wire1.write(Addr);
-    // Wire1.endTransmission();
-    // Wire1.requestFrom(0x34, 1);
-    // return Wire1.read();
     uint8_t res=0;
-    m_i2c.readByte(m_addr, reg, &res);
+    m_port.readByte(m_dev_addr, reg, &res);
     return res;
 }
 
@@ -104,63 +89,16 @@ uint16_t AXP192::Read13Bit( uint8_t Addr)
     return Data;
 }
 
-// uint16_t AXP192::Read16bit( uint8_t Addr )
-// {
-//     uint16_t ReData = 0;
-//     Wire1.beginTransmission(0x34);
-//     Wire1.write(Addr);
-//     Wire1.endTransmission();
-//     Wire1.requestFrom(0x34, 2);
-//     for( int i = 0 ; i < 2 ; i++ )
-//     {
-//         ReData <<= 8;
-//         ReData |= Wire1.read();
-//     }
-//     return ReData;
-// }
-
-// uint32_t AXP192::Read24bit( uint8_t Addr )
-// {
-//     uint32_t ReData = 0;
-//     Wire1.beginTransmission(0x34);
-//     Wire1.write(Addr);
-//     Wire1.endTransmission();
-//     Wire1.requestFrom(0x34, 3);
-//     for( int i = 0 ; i < 3 ; i++ )
-//     {
-//         ReData <<= 8;
-//         ReData |= Wire1.read();
-//     }
-//     return ReData;
-// }
-
 uint32_t AXP192::Read32bit( uint8_t reg )
 {
     uint32_t ReData = 0;
-    // Wire1.beginTransmission(0x34);
-    // Wire1.write(Addr);
-    // Wire1.endTransmission();
-    // Wire1.requestFrom(0x34, 4);
-    // for( int i = 0 ; i < 4 ; i++ )
-    // {
-    //     ReData <<= 8;
-    //     ReData |= Wire1.read();
-    // }
-    m_i2c.readBytes(m_addr, reg, sizeof(ReData), (uint8_t*)&ReData );
+    m_port.readBytes(m_dev_addr, reg, sizeof(ReData), (uint8_t*)&ReData );
     return ReData;
 }
 
 void AXP192::ReadBuff( uint8_t Addr , uint8_t Size , uint8_t *Buff )
 {
-    // Wire1.beginTransmission(0x34);
-    // Wire1.write(Addr);
-    // Wire1.endTransmission();
-    // Wire1.requestFrom(0x34, (int)Size);
-    // for (int i = 0; i < Size; i++)
-    // {
-    //     *( Buff + i )  = Wire1.read();
-    // }
-    m_i2c.readBytes(m_addr, Addr, Size, Buff);
+    m_port.readBytes(m_dev_addr, Addr, Size, Buff);
 }
 
 void AXP192::ScreenBreath(uint8_t brightness)

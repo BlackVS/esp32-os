@@ -78,6 +78,8 @@ typedef enum {
     DLPF_2100HZ_NOLPF = 7
 #elif CONFIG_MPU6500
     DLPF_3600HZ_NOLPF     = 7
+#elif CONFIG_MPU6886
+    DLPF_4000HZ_NOLPF     = 7
 #endif
 } dlpf_t;
 
@@ -92,7 +94,7 @@ typedef enum {
     CLOCK_KEEP_RESET = 7  //!< Stops the clock and keeps timing generator in reset
 } clock_src_t;
 
-#ifdef CONFIG_MPU6500
+#if defined CONFIG_MPU6500 || defined CONFIG_MPU6886
 /*! Fchoice (Frequency choice maybe ?) [MPU6500 and MPU9250 only] */
 typedef enum {  //
     FCHOICE_0 = 0,
@@ -102,6 +104,7 @@ typedef enum {  //
 } fchoice_t;
 #endif
 
+#ifndef CONFIG_NO_LP
 /*! Low-Power Accelerometer wake-up rates */
 typedef enum {
 #if defined CONFIG_MPU6000 || defined CONFIG_MPU6050 || defined CONFIG_MPU9150
@@ -109,7 +112,7 @@ typedef enum {
     LP_ACCEL_RATE_5HZ    = 1,
     LP_ACCEL_RATE_20HZ   = 2,
     LP_ACCEL_RATE_40HZ   = 3
-#elif defined CONFIG_MPU6500 || defined CONFIG_MPU9250
+#elif defined CONFIG_MPU6500 || defined CONFIG_MPU9250 
     LP_ACCEL_RATE_0_24HZ  = 0,
     LP_ACCEL_RATE_0_49HZ  = 1,
     LP_ACCEL_RATE_0_98HZ  = 2,
@@ -124,6 +127,7 @@ typedef enum {
     LP_ACCEL_RATE_500HZ   = 11
 #endif
 } lp_accel_rate_t;
+#endif
 
 /*! Accelerometer Digital High Pass Filter (only for motion detection modules) */
 typedef enum {

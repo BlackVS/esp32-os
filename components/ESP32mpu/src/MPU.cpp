@@ -39,7 +39,7 @@ namespace mpud
  *  - INT pin: disabled
  *  - FIFO: disabled
  *  - Clock source: gyro PLL \n
- *  For MPU9150 and MPU9250:
+ *  For MPU9150 and MPU9250 and MPU6886:
  *  - Aux I2C Master: enabled, clock: 400KHz
  *  - Compass: enabled on Aux I2C's Slave 0 and Slave 1
  *
@@ -147,6 +147,8 @@ esp_err_t MPU::testConnection()
     return (wai == 0x73) ? ESP_OK : ESP_ERR_NOT_FOUND;
 #elif defined CONFIG_MPU9250
     return (wai == 0x71) ? ESP_OK : ESP_ERR_NOT_FOUND;
+#elif defined CONFIG_MPU6886
+    return (wai == 0x19) ? ESP_OK : ESP_ERR_NOT_FOUND;
 #elif defined CONFIG_MPU6555
     return (wai == 0x7C) ? ESP_OK : ESP_ERR_NOT_FOUND;
 #elif defined CONFIG_MPU6500
@@ -429,12 +431,15 @@ bool MPU::getLowPowerAccelMode()
 /**
  * @brief Set Low Power Accelerometer frequency of wake-up.
  * */
+#ifndef CONFIG_NO_LP
 esp_err_t MPU::setLowPowerAccelRate(lp_accel_rate_t rate)
 {
 #if defined CONFIG_MPU6050
     return MPU_ERR_CHECK(writeBits(regs::PWR_MGMT2, regs::PWR2_LP_WAKE_CTRL_BIT, regs::PWR2_LP_WAKE_CTRL_LENGTH, rate));
 #elif defined CONFIG_MPU6500
     return MPU_ERR_CHECK(writeBits(regs::LP_ACCEL_ODR, regs::LPA_ODR_CLKSEL_BIT, regs::LPA_ODR_CLKSEL_LENGTH, rate));
+#else 
+    return ESP_FAIL;
 #endif
 }
 
@@ -445,11 +450,13 @@ lp_accel_rate_t MPU::getLowPowerAccelRate()
 {
 #if defined CONFIG_MPU6050
     MPU_ERR_CHECK(readBits(regs::PWR_MGMT2, regs::PWR2_LP_WAKE_CTRL_BIT, regs::PWR2_LP_WAKE_CTRL_LENGTH, buffer));
+    return (lp_accel_rate_t) buffer[0];
 #elif defined CONFIG_MPU6500
     MPU_ERR_CHECK(readBits(regs::LP_ACCEL_ODR, regs::LPA_ODR_CLKSEL_BIT, regs::LPA_ODR_CLKSEL_LENGTH, buffer));
-#endif
     return (lp_accel_rate_t) buffer[0];
+#endif
 }
+#endif
 
 /**
  * @brief Enable/disable Motion modules (Motion detect, Zero-motion, Free-Fall).
@@ -479,6 +486,8 @@ esp_err_t MPU::setMotionFeatureEnabled(bool enable)
         constexpr dlpf_t kDLPF = DLPF_256HZ_NOLPF;
 #elif defined CONFIG_MPU6500
         constexpr dlpf_t kDLPF = DLPF_188HZ;
+#elif defined CONFIG_MPU6886
+        constexpr dlpf_t kDLPF = DLPF_256HZ_NOLPF;
 #endif
         if (MPU_ERR_CHECK(setDigitalLowPassFilter(kDLPF))) return err;
 #if defined CONFIG_MPU6050
@@ -917,7 +926,7 @@ esp_err_t MPU::computeOffsets(raw_axes_t* accel, raw_axes_t* gyro)
 /**
  * @brief Read accelerometer raw data.
  * */
-esp_err_t MPU::acceleration(raw_axes_t* accel)
+esp_err_t MPU::accelerationRaw(raw_axes_t* accel)
 {
     if (MPU_ERR_CHECK(readBytes(regs::ACCEL_XOUT_H, 6, buffer))) return err;
     accel->x = buffer[0] << 8 | buffer[1];
@@ -929,7 +938,7 @@ esp_err_t MPU::acceleration(raw_axes_t* accel)
 /**
  * @brief Read accelerometer raw data.
  * */
-esp_err_t MPU::acceleration(int16_t* x, int16_t* y, int16_t* z)
+esp_err_t MPU::accelerationRaw(int16_t* x, int16_t* y, int16_t* z)
 {
     if (MPU_ERR_CHECK(readBytes(regs::ACCEL_XOUT_H, 6, buffer))) return err;
     *x = buffer[0] << 8 | buffer[1];
@@ -941,7 +950,7 @@ esp_err_t MPU::acceleration(int16_t* x, int16_t* y, int16_t* z)
 /**
  * @brief Read gyroscope raw data.
  * */
-esp_err_t MPU::rotation(raw_axes_t* gyro)
+esp_err_t MPU::rotationRaw(raw_axes_t* gyro)
 {
     if (MPU_ERR_CHECK(readBytes(regs::GYRO_XOUT_H, 6, buffer))) return err;
     gyro->x = buffer[0] << 8 | buffer[1];
@@ -953,7 +962,7 @@ esp_err_t MPU::rotation(raw_axes_t* gyro)
 /**
  * @brief Read gyroscope raw data.
  * */
-esp_err_t MPU::rotation(int16_t* x, int16_t* y, int16_t* z)
+esp_err_t MPU::rotationRaw(int16_t* x, int16_t* y, int16_t* z)
 {
     if (MPU_ERR_CHECK(readBytes(regs::GYRO_XOUT_H, 6, buffer))) return err;
     *x = buffer[0] << 8 | buffer[1];
@@ -965,10 +974,21 @@ esp_err_t MPU::rotation(int16_t* x, int16_t* y, int16_t* z)
 /**
  * Read temperature raw data.
  * */
-esp_err_t MPU::temperature(int16_t* temp)
+esp_err_t MPU::temperatureRaw(int16_t* temp)
 {
     if (MPU_ERR_CHECK(readBytes(regs::TEMP_OUT_H, 2, buffer))) return err;
     *temp = buffer[0] << 8 | buffer[1];
+    return err;
+}
+
+/**
+ * Read temperature raw data.
+ * */
+esp_err_t MPU::temperatureC(float* temp)
+{
+    int16_t temp_raw;
+    if (MPU_ERR_CHECK(temperatureRaw(&temp_raw))) return err;
+    *temp = tempCelsius(temp_raw);
     return err;
 }
 

@@ -38,6 +38,8 @@
         "variant": "cpp",
         "utility": "cpp",
         "cstdio": "cpp",
-        "cstdint": "cpp"
+        "cstdint": "cpp",
+        "cmath": "cpp",
+        "complex": "cpp"
     }
 }

@@ -63,6 +63,7 @@ void Board_TTGO::init()
 {
     ESP_LOGD(TAG,"%s: starting", __FUNCTION__);
 
+
     // Initialize I2C on port 0 using I2Cbus interface
     WiFi.init();
 

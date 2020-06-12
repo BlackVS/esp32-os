@@ -96,7 +96,14 @@ inline float_axes_t gyroRadPerSec(const raw_axes_t& raw_axes, const gyro_fs_t fs
     return axes;
 }
 
-#if defined CONFIG_MPU6500 || defined CONFIG_MPU9250
+// Treal = Traw/kTempSensitivity + kCelsiusOffset - kRoomTempOffset/kTempSensitivity
+// if Traw==kRoomTempOffset then Treal=kCelsiusOffset
+
+#if defined CONFIG_MPU6886
+constexpr int16_t kRoomTempOffset = 0;   // LSB
+constexpr float kCelsiusOffset    = 25.f;   // ºC
+constexpr float kTempSensitivity  = 326.8f;  // LSB/ºC
+#elif defined CONFIG_MPU6500 || defined CONFIG_MPU9250
 constexpr int16_t kRoomTempOffset = 0;        // LSB
 constexpr float kCelsiusOffset    = 21.f;     // ºC
 constexpr float kTempSensitivity  = 333.87f;  // LSB/ºC
