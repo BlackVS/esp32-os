@@ -45,8 +45,8 @@ ESP32_SPIdevice spiDevice(spiBus, GPIO_NUM_18, GPIO_NUM_5, GPIO_NUM_23, 27000000
 //                                   Reset        CS           DC
 
 // Initialize 80*160*16 TFT 
-//ESP32_SPI_TFT   spiTFT(spiDevice, 80, 160, 26,  1,  TFT_ROTATION_90,  TFT_ST7735_M5STICKC); 80*160*16 TFT 0.96 BGR
-ESP32_SPI_TFT   spiTFT(spiDevice, 128, 128, 2,  1,  TFT_ROTATION_0,  TFT_ST7735_128x128x16);
+ESP32_SPI_TFT   spiTFT(spiDevice, 80, 160, 26,  1,  TFT_ROTATION_90,  TFT_ST7735_M5STICKC); 
+//ESP32_SPI_TFT   spiTFT(spiDevice, 128, 128, 2,  1,  TFT_ROTATION_0,  TFT_ST7735_128x128x16);
 //                                 W   H  ofsX ofsY
 
 // And attch to NanoDisplay library
