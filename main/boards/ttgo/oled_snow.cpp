@@ -93,13 +93,12 @@ const PROGMEM uint8_t snowFlakeImage[8][8] =
 
 
 NANO_ENGINE_TYPE engine(display);
-typedef NanoFixedSprite<ENGINE::TilerT> CSnowFlake;
 
-class SnowFlake: public CSnowFlake
+class SnowFlake: public NANO_SPRITE_TYPE
 {
 public:
     SnowFlake()
-    : CSnowFlake({0, 0}, {8, 8}, nullptr) 
+    : NANO_SPRITE_TYPE({0, 0}, {8, 8}, nullptr) 
     { 
     }
 

@@ -8,9 +8,13 @@
 #include "esp32_tft_i2c.h"
 
 #include "esp32_mpu.h"
+#include "MPU.hpp"        // main file, provides the class itself
+// #include "mpu/math.hpp"   // math helper for dealing with MPU data
+// #include "mpu/types.hpp"  // MPU data types and definitions
+
 #include "touch_button.h"
 
-typedef ESP32_Display<NanoDisplayOps1, ESP32_I2C_TFT> DISPLAY_TYPE;
+typedef ESP32_Display<1, ESP32_I2C_TFT> DISPLAY_TYPE;
 typedef NanoEngine1<DISPLAY_TYPE> NANO_ENGINE_TYPE;
 typedef NanoFixedSprite<NANO_ENGINE_TYPE::TilerT> NANO_SPRITE_TYPE;
 

@@ -9,16 +9,13 @@
  */
 const int spriteWidth = sizeof(heartImage);
 
-typedef NanoEngine16<DISPLAY_TYPE> ENGINE;
-ENGINE engine(display);
-typedef NanoFixedSprite<ENGINE::TilerT> CSprite;
+NANO_ENGINE_TYPE engine(display);
 
-
-class CHeart: public CSprite
+class CHeart: public NANO_SPRITE_TYPE
 {
 public:
     CHeart()
-    : CSprite({0, 0}, {8, 8}, heartImage) 
+    : NANO_SPRITE_TYPE({0, 0}, {8, 8}, heartImage) 
     { 
     }
 
