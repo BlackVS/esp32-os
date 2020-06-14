@@ -1,3 +1,5 @@
+#include "esp32_tools.h"
+#include <cstdio>
 
 template <uint8_t BPP>
 void NanoDisplayOps<BPP>::putPixel(const NanoPoint &p)
@@ -30,8 +32,8 @@ void NanoDisplayOps<BPP>::drawLine(int x1, int y1, int x2, int y2)
     {
         if (y1 > y2)
         {
-            ssd1306_swap_data(x1, x2, int);
-            ssd1306_swap_data(y1, y2, int);
+            SWAP(x1, x2);
+            SWAP(y1, y2);
         }
         for(; y1<=y2; y1++)
         {
@@ -48,8 +50,8 @@ void NanoDisplayOps<BPP>::drawLine(int x1, int y1, int x2, int y2)
     {
         if (x1 > x2)
         {
-            ssd1306_swap_data(x1, x2, int);
-            ssd1306_swap_data(y1, y2, int);
+            SWAP(x1, x2);
+            SWAP(y1, y2);
         }
         for(; x1<=x2; x1++)
         {
@@ -84,7 +86,7 @@ void NanoDisplayOps<BPP>::printFixedPgm(int xpos, int y, const char *ch, EFontSt
     this->m_cursorY = y;
     for (;;)
     {
-        char c = pgm_read_byte(ch);
+        char c = ch[0];
         if (!c) break;
         this->write(c);
         ch++;

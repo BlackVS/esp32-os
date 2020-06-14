@@ -28,7 +28,3 @@ class ESP32_TFT_Notifications
         virtual void on_rotation_changed()=0;
 };
 
-inline void tft_delay(unsigned long ms)
-{
-    vTaskDelay(ms / portTICK_PERIOD_MS);
-}

@@ -4,6 +4,7 @@
 #include "driver/spi_master.h"
 #include "esp_log.h"
 
+#include "esp32_tools.h"
 #include "esp32_tft_spi.h"
 #include "esp32_tft_constants.h"
 
@@ -11,8 +12,6 @@
 
 #define CMDDELAY 0xFF
 
-
-#define SWAP(a, b) do { typeof(a) temp = a; a = b; b = temp; } while (0)
 
 static const uint8_t ST7735_128x128x16_INIT[] =
 {
@@ -187,7 +186,7 @@ void ESP32_SPI_TFT::configureDisplay(const uint8_t *config, uint8_t configSize)
         //single cmd + delay
         if( arg_len==CMDDELAY) {
             m_device.write_cmd(cmd);
-            spi_delay(config[i++]);
+            delay(config[i++]);
             continue;
         }
         //complex command
@@ -205,7 +204,7 @@ esp_err_t ESP32_SPI_TFT::init()
 {
     //ESP_LOGD(TAG, "%s()", __FUNCTION__);
     // Give LCD some time to initialize. Refer to ST7735 datasheet
-    spi_delay(120);
+    delay(120);
     
     TFT_TYPE dtype=m_display_type;
     if(dtype==TFT_AUTO) 

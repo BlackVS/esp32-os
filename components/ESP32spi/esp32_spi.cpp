@@ -6,15 +6,10 @@
 
 #include <cstring>
 
+#include "esp32_tools.h"
 #include "esp32_spi.h"
 
 #define USE_POLLING_TRANSMIT 1
-
-
-void spi_delay(unsigned long ms)
-{
-    vTaskDelay(ms / portTICK_PERIOD_MS);
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 #undef TAG
@@ -147,14 +142,14 @@ esp_err_t ESP32_SPIdevice::reset(unsigned int delayMs)
     gpio_set_level(m_pin_reset, 1);
 
     /* Wait at least 10ms after VCC is up for LCD */
-    spi_delay(10);
+    delay(10);
     
     /* Perform reset operation of LCD display */
     gpio_set_level(m_pin_reset, 0);
-    spi_delay(10);
+    delay(10);
 
     gpio_set_level(m_pin_reset, 1);
-    spi_delay(delayMs);
+    delay(delayMs);
 
     return ESP_OK;
 }

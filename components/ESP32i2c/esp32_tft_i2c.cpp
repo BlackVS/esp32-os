@@ -4,6 +4,7 @@
 //#include "driver/spi_master.h"
 #include "esp_log.h"
 
+#include "esp32_tools.h"
 #include "esp32_tft_i2c.h"
 #include "esp32_tft_constants.h"
 
@@ -58,7 +59,7 @@ esp_err_t ESP32_I2C_TFT::init()
 {
     m_device.reset();
     // Give LCD some time to initialize. Refer to SSD1306 datasheet
-    tft_delay(0);
+    delay(0);
 
     switch(m_display_type)
     {

@@ -40,9 +40,9 @@ NanoFont g_canvas_font;
 
 static const uint8_t * ssd1306_readUnicodeRecord(SUnicodeBlockRecord *r, const uint8_t *p)
 {
-    r->start_code =( (static_cast<uint16_t>(pgm_read_byte(&p[0])) << 8)) |
-                     static_cast<uint16_t>(pgm_read_byte(&p[1]) );
-    r->count = pgm_read_byte(&p[2]);
+    r->start_code =( (static_cast<uint16_t>(p[0]) << 8)) |
+                     static_cast<uint16_t>(p[1]);
+    r->count = p[2];
     return (r->count > 0) ? (&p[3]): nullptr;
 }
 
@@ -130,10 +130,10 @@ static void _ssd1306_oldFormatGetBitmap(SFixedFontInfo &font, uint16_t unicode, 
 
 void NanoFont::loadFixedFont(const uint8_t * progmemFont)
 {
-    m_fixedFont.h.type   = pgm_read_byte( &progmemFont[0] );
-    m_fixedFont.h.width  = pgm_read_byte(&progmemFont[1]);
-    m_fixedFont.h.height = pgm_read_byte(&progmemFont[2]);
-    m_fixedFont.h.ascii_offset = pgm_read_byte(&progmemFont[3]);
+    m_fixedFont.h.type   = progmemFont[0];
+    m_fixedFont.h.width  = progmemFont[1];
+    m_fixedFont.h.height = progmemFont[2];
+    m_fixedFont.h.ascii_offset = progmemFont[3];
     m_fixedFont.primary_table = progmemFont + 4;
     m_getCharBitmap = _ssd1306_oldFormatGetBitmap;
     m_fixedFont.pages = (m_fixedFont.h.height + 7) >> 3;
@@ -178,8 +178,8 @@ static void _ssd1306_newFormatGetBitmap(SFixedFontInfo &font, uint16_t unicode, 
                 // skip jump table
                 data += static_cast<uint16_t>(r.count) * 4;
                 // skip block bitmap data
-                uint16_t offset = ( (static_cast<uint16_t>(pgm_read_byte(&data[0])) << 8) |
-                                     static_cast<uint16_t>(pgm_read_byte(&data[1])) ) + 2;
+                uint16_t offset = ( (static_cast<uint16_t>(data[0]) << 8) |
+                                     static_cast<uint16_t>(data[1]) ) + 2;
 //                printf("JMP OFFSET: %d\n", offset);
                 data += offset;
 //                printf("JMP DONE: %02X %02X %02X\n", data[0], data[1], data[2]);
@@ -188,9 +188,9 @@ static void _ssd1306_newFormatGetBitmap(SFixedFontInfo &font, uint16_t unicode, 
             /* At this point data points to jump table (offset|offset|bytes|width) */
             unicode -= r.start_code;
             data += unicode * 4;
-            uint16_t offset = (pgm_read_byte(&data[0]) << 8) | (pgm_read_byte(&data[1]));
-            uint8_t glyph_width = pgm_read_byte(&data[2]);
-            uint8_t glyph_height = pgm_read_byte(&data[3]);
+            uint16_t offset = (data[0] << 8) | (data[1]);
+            uint8_t glyph_width = data[2];
+            uint8_t glyph_height = data[3];
             info->width = glyph_width;
             info->height = glyph_height;
             info->spacing = glyph_width ? font.spacing : (font.h.width >> 1);
@@ -209,10 +209,10 @@ static void _ssd1306_newFormatGetBitmap(SFixedFontInfo &font, uint16_t unicode, 
 
 void NanoFont::loadFreeFont(const uint8_t * progmemFont)
 {
-    m_fixedFont.h.type   = pgm_read_byte( &progmemFont[0] );
-    m_fixedFont.h.width  = pgm_read_byte(&progmemFont[1]);
-    m_fixedFont.h.height = pgm_read_byte(&progmemFont[2]);
-    m_fixedFont.h.ascii_offset = pgm_read_byte(&progmemFont[3]);
+    m_fixedFont.h.type   = progmemFont[0];
+    m_fixedFont.h.width  = progmemFont[1];
+    m_fixedFont.h.height = progmemFont[2];
+    m_fixedFont.h.ascii_offset = progmemFont[3];
     m_fixedFont.primary_table = progmemFont + 4;
     m_getCharBitmap = _ssd1306_newFormatGetBitmap;
     m_fixedFont.spacing = 1;
@@ -235,10 +235,10 @@ void NanoFont::loadSecondaryFont(const uint8_t * progmemUnicode)
 
 void NanoFont::loadFixedFont_oldStyle(const uint8_t * progmemFont)
 {
-    m_fixedFont.h.type   = pgm_read_byte( &progmemFont[0] );
-    m_fixedFont.h.width  = pgm_read_byte(&progmemFont[1]);
-    m_fixedFont.h.height = pgm_read_byte(&progmemFont[2]);
-    m_fixedFont.h.ascii_offset = pgm_read_byte(&progmemFont[3]);
+    m_fixedFont.h.type   = progmemFont[0];
+    m_fixedFont.h.width  = progmemFont[1];
+    m_fixedFont.h.height = progmemFont[2];
+    m_fixedFont.h.ascii_offset = progmemFont[3];
     m_fixedFont.primary_table = progmemFont + 4;
     m_fixedFont.pages = (m_fixedFont.h.height + 7) >> 3;
     m_fixedFont.glyph_size = m_fixedFont.pages * m_fixedFont.h.width;
@@ -267,8 +267,8 @@ static void _ssd1306_squixFormatGetBitmap(SFixedFontInfo &font, uint16_t unicode
         const uint8_t * bitmap_data = data + (uint16_t)font.count * 4;
         unicode -= font.h.ascii_offset;
         data += (unicode * 4);
-        uint16_t offset = (pgm_read_byte(&data[0]) << 8) | pgm_read_byte(&data[1]);
-        uint8_t glyph_bytes = pgm_read_byte(&data[2]);
+        uint16_t offset = (data[0] << 8) | data[1];
+        uint8_t glyph_bytes = data[2];
 //        uint8_t width = pgm_read_byte(&data[3]);
         info->width = glyph_bytes; //(glyph_bytes + font.pages - 1)  / font.pages;
         info->height = font.h.height / 2;
@@ -285,10 +285,10 @@ static void _ssd1306_squixFormatGetBitmap(SFixedFontInfo &font, uint16_t unicode
 void NanoFont::loadSquixFont(const uint8_t * progmemFont)
 {
     m_fixedFont.h.type = SSD1306_SQUIX_FORMAT;
-    m_fixedFont.h.width  = pgm_read_byte(&progmemFont[0]);
-    m_fixedFont.h.height = pgm_read_byte(&progmemFont[1]);
-    m_fixedFont.h.ascii_offset = pgm_read_byte(&progmemFont[2]);
-    m_fixedFont.count = pgm_read_byte(&progmemFont[3]);
+    m_fixedFont.h.width  = progmemFont[0];
+    m_fixedFont.h.height = progmemFont[1];
+    m_fixedFont.h.ascii_offset = progmemFont[2];
+    m_fixedFont.count = progmemFont[3];
     m_fixedFont.primary_table = progmemFont + 4;
     m_getCharBitmap = _ssd1306_squixFormatGetBitmap;
     m_fixedFont.pages = (m_fixedFont.h.height + 7) >> 3;

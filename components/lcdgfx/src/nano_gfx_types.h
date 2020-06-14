@@ -28,7 +28,6 @@
 #ifndef _NANO_GFX_TYPES_H_
 #define _NANO_GFX_TYPES_H_
 
-#include "platform.h"
 #include "canvas/canvas_types.h"
 
 #ifndef min

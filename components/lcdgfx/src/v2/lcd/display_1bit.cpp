@@ -1,39 +1,10 @@
-/*
-    MIT License
-
-    Copyright (c) 2016-2020, Alexey Dynda
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-*/
-
-///////////////////////////////////////////////////////////////////////////////
-////// GENERIC FUNCTIONS APPLICABLE FOR ALL DISPLAY TYPES /////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-//#include "platform.h"
-#include "display.h"
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 //                             1-BIT GRAPHICS
 //
 /////////////////////////////////////////////////////////////////////////////////
+
+#include "display_Xbits.h"
 
 template<>
 void NanoDisplayOpsX<1>::printFixed(int xpos, int y, const char *ch, EFontStyle style)
@@ -90,17 +61,17 @@ void NanoDisplayOpsX<1>::printFixed(int xpos, int y, const char *ch, EFontStyle 
                 uint8_t data;
                 if ( style == STYLE_NORMAL )
                 {
-                    data = pgm_read_byte(&char_info.glyph[0]);
+                    data = char_info.glyph[0];
                 }
                 else if ( style == STYLE_BOLD )
                 {
-                    uint8_t temp = pgm_read_byte(&char_info.glyph[0]);
+                    uint8_t temp = char_info.glyph[0];
                     data = temp | ldata;
                     ldata = temp;
                 }
                 else
                 {
-                    uint8_t temp = pgm_read_byte(&char_info.glyph[1]);
+                    uint8_t temp = char_info.glyph[1];
                     data = (temp & 0xF0) | ldata;
                     ldata = (temp & 0x0F);
                 }
@@ -164,8 +135,8 @@ void NanoDisplayOpsX<1>::drawBitmap1(int x, int y, unsigned int w, unsigned int 
         for( i=w; i > 0; i--)
         {
             uint8_t data = 0;
-            if ( mainFlag )    data |= ((pgm_read_byte(bitmap) << offset) & color);
-            if ( complexFlag ) data |= ((pgm_read_byte(bitmap - origin_width) >> (8 - offset)) & color);
+            if ( mainFlag )    data |= (( bitmap[0] << offset) & color);
+            if ( complexFlag ) data |= (( (bitmap - origin_width)[0] >> (8 - offset)) & color);
             bitmap++;
             m_intf.send(s_ssd1306_invertByte^data);
         }
@@ -283,17 +254,17 @@ void NanoDisplayOpsX<1>::printFixed_oldStyle(uint8_t xpos, uint8_t y, const char
             uint8_t data;
             if ( style == STYLE_NORMAL )
             {
-                data = pgm_read_byte(&this->m_font->getPrimaryTable()[offset]);
+                data = this->m_font->getPrimaryTable()[offset];
             }
             else if ( style == STYLE_BOLD )
             {
-                uint8_t temp = pgm_read_byte(&this->m_font->getPrimaryTable()[offset]);
+                uint8_t temp = this->m_font->getPrimaryTable()[offset];
                 data = temp | ldata;
                 ldata = temp;
             }
             else
             {
-                uint8_t temp = pgm_read_byte(&this->m_font->getPrimaryTable()[offset + 1]);
+                uint8_t temp = this->m_font->getPrimaryTable()[offset + 1];
                 data = (temp & 0xF0) | ldata;
                 ldata = (temp & 0x0F);
             }
@@ -363,17 +334,17 @@ void NanoDisplayOpsX<1>::printFixedN(int xpos, int y, const char *ch, EFontStyle
                 uint8_t data;
                 if ( style == STYLE_NORMAL )
                 {
-                    data = pgm_read_byte(char_info.glyph);
+                    data = char_info.glyph[0];
                 }
                 else if ( style == STYLE_BOLD )
                 {
-                    uint8_t temp = pgm_read_byte(char_info.glyph);
+                    uint8_t temp = char_info.glyph[0];
                     data = temp | ldata;
                     ldata = temp;
                 }
                 else
                 {
-                    uint8_t temp = pgm_read_byte(char_info.glyph+1);
+                    uint8_t temp = (char_info.glyph+1)[0];
                     data = (temp & 0xF0) | ldata;
                     ldata = (temp & 0x0F);
                 }
@@ -513,7 +484,7 @@ void NanoDisplayOpsX<1>::drawXBitmap(int x, int y, unsigned int w, unsigned int 
             uint8_t data = 0;
             for (uint8_t k = 0; k<8; k++)
             {
-                data |= ( ((pgm_read_byte(&bitmap[k*pitch]) >> bit) & 0x01) << k );
+                data |= ( ( (bitmap[k*pitch] >> bit) & 0x01) << k );
             }
             m_intf.send( s_ssd1306_invertByte^data );
             bit++;
@@ -584,8 +555,8 @@ void NanoDisplayOpsX<1>::gfx_drawMonoBitmap(int x, int y, unsigned int w, unsign
         for( i=w; i > 0; i--)
         {
             uint8_t data = 0;
-            if ( mainFlag )    data |= ((pgm_read_byte(buf) << offset) & color);
-            if ( complexFlag ) data |= ((pgm_read_byte(buf - origin_width) >> (8 - offset)) & color);
+            if ( mainFlag )    data |= (( buf[0] << offset) & color);
+            if ( complexFlag ) data |= (( (buf - origin_width)[0] >> (8 - offset)) & color);
             buf++;
             m_intf.send(s_ssd1306_invertByte^data);
         }

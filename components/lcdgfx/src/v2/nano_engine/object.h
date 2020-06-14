@@ -30,7 +30,6 @@
 
 #include "canvas/point.h"
 #include "canvas/rect.h"
-#include "platform.h"
 #include "tiler.h"
 
 /**

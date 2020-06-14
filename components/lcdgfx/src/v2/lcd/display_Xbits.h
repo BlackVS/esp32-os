@@ -252,9 +252,4 @@ public:
 protected:
 };
 
-#include "display_1bit.inl"
-#include "display_4bit.inl"
-#include "display_8bit.inl"
-#include "display_16bit.inl"
-
 #include "display_Xbits.inl"

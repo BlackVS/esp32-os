@@ -273,7 +273,6 @@ esp_err_t http_get(const char *url, std::string& data);
 
 
 void set_ntp();
-void print_time(void);
 
 
 

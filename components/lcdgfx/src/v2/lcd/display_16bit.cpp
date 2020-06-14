@@ -85,11 +85,11 @@ void NanoDisplayOpsX<16>::fillRect(int x1, int y1, int x2, int y2)
 {
     if (y1 > y2)
     {
-        ssd1306_swap_data(y1, y2, int);
+        SWAP(y1, y2);
     }
     if (x1 > x2)
     {
-        ssd1306_swap_data(x1, x2, int);
+        SWAP(x1, x2);
     }
     m_intf.startBlock(x1, y1, x2 - x1 + 1);
     uint16_t count = (x2 - x1 + 1) * (y2 - y1 + 1);
@@ -138,7 +138,7 @@ void NanoDisplayOpsX<16>::drawBitmap1(int xpos, int ypos, unsigned int w, unsign
         unsigned int wx = w;
         while ( wx-- )
         {
-            uint8_t data = pgm_read_byte( bitmap );
+            uint8_t data = bitmap[0];
             if ( data & bit )
             {
                 m_intf.send( color >> 8 );
@@ -181,7 +181,7 @@ void NanoDisplayOpsX<16>::drawBitmap8(int x, int y, unsigned int w, unsigned int
     uint32_t count = (w) * (h);
     while (count--)
     {
-        uint16_t color = RGB8_TO_RGB16(pgm_read_byte(bitmap));
+        uint16_t color = RGB8_TO_RGB16( bitmap[0] );
         m_intf.send( color >> 8 );
         m_intf.send( color & 0xFF );
         bitmap++;
@@ -198,8 +198,8 @@ void NanoDisplayOpsX<16>::drawBitmap16(int x, int y, unsigned int w, unsigned in
     uint32_t count = (w) * (h);
     while (count--)
     {
-        m_intf.send( pgm_read_byte( &bitmap[0] ) );
-        m_intf.send( pgm_read_byte( &bitmap[1] ) );
+        m_intf.send( bitmap[0] );
+        m_intf.send( bitmap[1] );
         bitmap += 2;
     }
     m_intf.endBlock();

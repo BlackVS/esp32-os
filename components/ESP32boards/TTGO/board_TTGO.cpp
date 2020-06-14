@@ -90,6 +90,6 @@ void Board_TTGO::init()
     display.printFixed(x, y+=8, "  by VVS  ", STYLE_BOLD);
     display.printFixed(x, y+=8, "==========", STYLE_NORMAL);
     display.printFixed(x, y+=8, "  v. " FIRMWARE_VERSION, STYLE_ITALIC);
-    lcd_delay(2000);
+    delay(2000);
 
 }

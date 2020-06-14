@@ -29,14 +29,6 @@
 
 #include "canvas/UserSettings.h"
 
-#if defined(ARDUINO)
-#elif defined(__AVR__)
-#else
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-static inline uint8_t pgm_read_byte(const void *ptr) { return *((const uint8_t *)ptr); }
-#endif
-#endif
-
 #ifndef min
 /** Macros returning minimum of 2 numbers */
 #define min(a,b) ((a)<(b)?(a):(b))

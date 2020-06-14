@@ -1,16 +1,11 @@
-#include "app.h"
+#include "esp32_tools.h"
 
-//__uint32_t millis(void)
-//{
-//   struct timespec ts;
-//   clock_gettime(CLOCK_MONOTONIC, &ts);
-//   return ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
-//};
-
-void delay(int ms)
-{
-    vTaskDelay(pdMS_TO_TICKS(ms));
-}
+//#include "freertos/FreeRTOS.h"
+//#include "freertos/task.h"
+#include "esp_log.h"
+#include "boards.h"
+#include "esp_spi_flash.h"
+//#include <ctime>
 
 void print_system_info(void)
 {
@@ -35,9 +30,9 @@ void print_system_info(void)
           (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
   printf(" Free heap   : %dKB \n", esp_get_free_heap_size()/1024);
 
-  mac_t base_mac;
-  esp_efuse_mac_get_default(base_mac.buf());
-  printf(" Default MAC : %s\n", mac2str(base_mac).c_str());
+  uint8_t base_mac[6];
+  esp_efuse_mac_get_default(base_mac);
+  printf(" Default MAC : %02x:%02x:%02x:%02x:%02x:%02x\n", base_mac[0], base_mac[1], base_mac[2], base_mac[3], base_mac[4], base_mac[5]);
 
   print_time();
 }

@@ -33,8 +33,6 @@
 #include "canvas/canvas.h"
 #include "nano_engine_v2.h"
 
-//#include "v2/lcd/ssd1306/lcd_ssd1306.h"
-
 /**
  * @defgroup LCD_GENERIC_API Generic API functions, common for all displays and all display modes.
  * @{

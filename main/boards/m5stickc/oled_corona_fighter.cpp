@@ -386,6 +386,8 @@ void loop_game()
 
     engine.update();//moves
     engine.display();
+
+    game_active = game_active && (game_total_score<=game_total_score_max);
 }
 
 void setup_screen_saver_start()

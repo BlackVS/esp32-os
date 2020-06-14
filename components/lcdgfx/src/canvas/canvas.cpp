@@ -181,7 +181,7 @@ void NanoCanvasOps<BPP>::printFixedPgm(int xpos, int y, const char *ch, EFontSty
     m_cursorY = y;
     for (;;)
     {
-        char c = pgm_read_byte(ch);
+        char c = ch[0];
         if (!c) break;
         write(c);
         ch++;
@@ -389,8 +389,8 @@ void NanoCanvasOps<1>::drawBitmap1(int x, int y, unsigned int w, unsigned int h,
         {
             uint8_t data = 0;
             uint8_t mask = 0;
-            if ( mainFlag )    { data |= (pgm_read_byte(bitmap) << offs); mask |= (0xFF << offs); }
-            if ( complexFlag ) { data |= (pgm_read_byte(bitmap - origin_width) >> (8 - offs)); mask |= (0xFF >> (8 - offs)); }
+            if ( mainFlag )    { data |= (bitmap[0] << offs); mask |= (0xFF << offs); }
+            if ( complexFlag ) { data |= ((bitmap - origin_width)[0] >> (8 - offs)); mask |= (0xFF >> (8 - offs)); }
             if (CANVAS_MODE_TRANSPARENT != (m_textMode & CANVAS_MODE_TRANSPARENT))
             {
                 m_buf[addr] &= ~mask;
@@ -578,7 +578,7 @@ void NanoCanvasOps<4>::drawBitmap1(int xpos, int ypos, unsigned int w, unsigned 
         {
             uint16_t src_addr1 = xb1 + x - x1 + ((yb1 + y - y1) / 8) * w;
             uint8_t src_bit1 = (yb1 + y - y1) & 0x07;
-            uint8_t data = pgm_read_byte( &bitmap[ src_addr1 ] );
+            uint8_t data = bitmap[ src_addr1 ];
             uint16_t addr = YADDR4(y) + x / 2;
             if (data & (1 << src_bit1))
             {
@@ -636,7 +636,7 @@ void NanoCanvasOps<4>::drawBitmap8(int xpos, int ypos, unsigned int w, unsigned 
         for ( int x = x1; x <= x2; x++ )
         {
             uint16_t src_addr8 = xb1 + x - x1 + ((yb1 + y - y1)) * w;
-            uint8_t data = pgm_read_byte( &bitmap[ src_addr8 ] );
+            uint8_t data = bitmap[ src_addr8 ];
             uint16_t addr = YADDR4(y) + x / 2;
             if ( (data) || (!(m_textMode & CANVAS_MODE_TRANSPARENT)) )
             {
@@ -807,7 +807,7 @@ void NanoCanvasOps<8>::drawBitmap1(int xpos, int ypos, unsigned int w, unsigned 
     {
         for ( int x = x1; x <= x2; x++ )
         {
-            uint8_t data = pgm_read_byte( bitmap );
+            uint8_t data = bitmap[0];
             uint16_t addr = YADDR8(y) + x;
             for (uint8_t n = 0; n < min(y2 - y + 1, 8); n++)
             {
@@ -861,7 +861,7 @@ void NanoCanvasOps<8>::drawBitmap8(int xpos, int ypos, unsigned int w, unsigned 
     {
         for ( int x = x1; x <= x2; x++ )
         {
-            uint8_t data = pgm_read_byte( bitmap );
+            uint8_t data = bitmap[0];
             if ( (data) || (!(m_textMode & CANVAS_MODE_TRANSPARENT)) )
             {
                 m_buf[YADDR8(y) + x] = data;
@@ -1037,7 +1037,7 @@ void NanoCanvasOps<16>::drawBitmap1(int xpos, int ypos, unsigned int w, unsigned
     {
         for ( int x = x1; x <= x2; x++ )
         {
-            uint8_t data = pgm_read_byte( bitmap );
+            uint8_t data = bitmap[0];
             uint16_t addr = YADDR16(y) + (x<<1);
             for (uint8_t n = 0; n < min(y2 - y + 1, 8); n++)
             {
@@ -1097,7 +1097,7 @@ void NanoCanvasOps<16>::drawBitmap8(int xpos, int ypos, unsigned int w, unsigned
     {
         for ( int x = x1; x <= x2; x++ )
         {
-            uint8_t data = pgm_read_byte( bitmap );
+            uint8_t data = bitmap[0];
             if ( (data) || (!(m_textMode & CANVAS_MODE_TRANSPARENT)) )
             {
                 uint16_t color = (((uint16_t)data & 0b11100000) << 8) |

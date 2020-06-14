@@ -4,6 +4,8 @@
 #include "esp_http_client.h"
 
 #include <cstring>
+#include "esp32_tools.h"
+
 
 static const char *TAG = __FILE__;
 
@@ -11,21 +13,6 @@ static wifi_ap_record_t _wifi_ap_info[DEFAULT_SCAN_LIST_SIZE];
 static uint16_t _wifi_ap_number = 0;
 
 CWiFi WiFi;
-
-void print_time(void)
-{
-  time_t now;
-  char strftime_buf[64];
-  struct tm timeinfo;
-
-  time(&now);
-  setenv("TZ", "GMT0", 1);
-  tzset();
-
-  localtime_r(&now, &timeinfo);
-  strftime(strftime_buf, sizeof(strftime_buf), "%c", &timeinfo);
-  printf("The current date/time is: %s GMT0\n", strftime_buf);
-}
 
 void set_ntp()
 {

@@ -27,10 +27,7 @@
 #include "canvas/point.h"
 #include "canvas/rect.h"
 #include "canvas/canvas.h"
-// #include "canvas/font.h"
-#include "platform.h"
-// #include "nano_gfx_types.h"
-// #include "display_base.h"
+
 
 #include "display_Xbits.h"
 

@@ -28,7 +28,6 @@
 
 #include "lcdgfx.h"
 #include "nano_gfx_types.h"
-#include "platform.h"
 
 uint8_t s_ssd1306_invertByte = 0x00000000;
 #ifdef CONFIG_SSD1306_UNICODE_ENABLE

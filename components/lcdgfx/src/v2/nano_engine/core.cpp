@@ -27,6 +27,10 @@
 #ifdef SDL_EMULATION
 #include "sdl_core.h"
 #endif
+
+#define LCD_LOW 0
+#define LCD_HIGH 1
+
 ///////////////////////////////////////////////////////////////////////////////
 ////// NANO ENGINE INPUTS CLASS ///////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,7 +62,7 @@ uint8_t NanoEngineInputs::s_zkeypadPin;
 
 uint8_t NanoEngineInputs::zkeypadButtons()
 {
-    int buttonValue = lcd_adcRead(s_zkeypadPin);
+    int buttonValue = adcRead(s_zkeypadPin);
     if (buttonValue < 100) return BUTTON_RIGHT;
     if (buttonValue < 200) return BUTTON_UP;
     if (buttonValue < 400) return BUTTON_DOWN;
@@ -105,12 +109,12 @@ void NanoEngineInputs::connectGpioKeypad(const uint8_t * gpioKeys)
 uint8_t NanoEngineInputs::gpioButtons()
 {
     uint8_t buttons = BUTTON_NONE;
-    if ((s_gpioKeypadPins[0]) && (lcd_gpioRead(s_gpioKeypadPins[0]) == LCD_HIGH)) buttons |= BUTTON_DOWN;
-    if ((s_gpioKeypadPins[1]) && (lcd_gpioRead(s_gpioKeypadPins[1]) == LCD_HIGH)) buttons |= BUTTON_LEFT;
-    if ((s_gpioKeypadPins[2]) && (lcd_gpioRead(s_gpioKeypadPins[2]) == LCD_HIGH)) buttons |= BUTTON_RIGHT;
-    if ((s_gpioKeypadPins[3]) && (lcd_gpioRead(s_gpioKeypadPins[3]) == LCD_HIGH)) buttons |= BUTTON_UP;
-    if ((s_gpioKeypadPins[4]) && (lcd_gpioRead(s_gpioKeypadPins[4]) == LCD_HIGH)) buttons |= BUTTON_A;
-    if ((s_gpioKeypadPins[5]) && (lcd_gpioRead(s_gpioKeypadPins[5]) == LCD_HIGH)) buttons |= BUTTON_B;
+    if ((s_gpioKeypadPins[0]) && (gpioRead(s_gpioKeypadPins[0]) == LCD_HIGH)) buttons |= BUTTON_DOWN;
+    if ((s_gpioKeypadPins[1]) && (gpioRead(s_gpioKeypadPins[1]) == LCD_HIGH)) buttons |= BUTTON_LEFT;
+    if ((s_gpioKeypadPins[2]) && (gpioRead(s_gpioKeypadPins[2]) == LCD_HIGH)) buttons |= BUTTON_RIGHT;
+    if ((s_gpioKeypadPins[3]) && (gpioRead(s_gpioKeypadPins[3]) == LCD_HIGH)) buttons |= BUTTON_UP;
+    if ((s_gpioKeypadPins[4]) && (gpioRead(s_gpioKeypadPins[4]) == LCD_HIGH)) buttons |= BUTTON_A;
+    if ((s_gpioKeypadPins[5]) && (gpioRead(s_gpioKeypadPins[5]) == LCD_HIGH)) buttons |= BUTTON_B;
     return buttons;
 }
 
@@ -124,22 +128,22 @@ void NanoEngineInputs::connectKY40encoder(uint8_t pina_clk, uint8_t pinb_dt, int
 
 uint8_t NanoEngineInputs::ky40Buttons()
 {
-    static uint8_t last_clk = lcd_gpioRead( s_ky40_clk );
+    static uint8_t last_clk = gpioRead( s_ky40_clk );
     uint8_t buttons = BUTTON_NONE;
-    uint8_t clk = lcd_gpioRead( s_ky40_clk );
+    uint8_t clk = gpioRead( s_ky40_clk );
     if ( clk != last_clk )
     {
         if ( clk == LCD_HIGH )
         {
-            buttons = lcd_gpioRead( s_ky40_dt ) == LCD_LOW ? BUTTON_DOWN : BUTTON_UP;
+            buttons = gpioRead( s_ky40_dt ) == LCD_LOW ? BUTTON_DOWN : BUTTON_UP;
         }
         else
         {
-            buttons = lcd_gpioRead( s_ky40_dt ) == LCD_HIGH ? BUTTON_DOWN : BUTTON_UP;
+            buttons = gpioRead( s_ky40_dt ) == LCD_HIGH ? BUTTON_DOWN : BUTTON_UP;
         }
     }
     last_clk = clk;
-    if ( s_ky40_sw >0 && lcd_gpioRead( s_ky40_sw ) == LCD_LOW )
+    if ( s_ky40_sw >0 && gpioRead( s_ky40_sw ) == LCD_LOW )
     {
         buttons |= BUTTON_A;
     }
@@ -152,7 +156,7 @@ uint8_t NanoEngineInputs::ky40Buttons()
 
 void NanoEngineCore::begin()
 {
-    m_lastFrameTs = lcd_millis();
+    m_lastFrameTs = millis();
 }
 
 void NanoEngineCore::setFrameRate(uint8_t fps)
@@ -167,7 +171,7 @@ void NanoEngineCore::setFrameRate(uint8_t fps)
 bool NanoEngineCore::nextFrame()
 {
     // We do not need 32-bit data here, since uin16_t allows to address 64 seconds
-    bool needUpdate = (uint16_t)(lcd_millis() - m_lastFrameTs) >= m_frameDurationMs;
+    bool needUpdate = (uint16_t)(millis() - m_lastFrameTs) >= m_frameDurationMs;
     if (needUpdate && m_loop) m_loop();
     return needUpdate;
 }

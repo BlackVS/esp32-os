@@ -1,11 +1,7 @@
 #include "MPU6886.h"
 #include <math.h>
+#include "esp32_tools.h"
 
-
-void mpu_delay(int ms)
-{
-    vTaskDelay(pdMS_TO_TICKS(ms));
-}
 
 MPU6886::MPU6886(I2C_t& port, uint16_t dev_addr)
 : m_port(port),
@@ -14,32 +10,18 @@ MPU6886::MPU6886(I2C_t& port, uint16_t dev_addr)
 
 }
 
-void MPU6886::I2C_Read_NBytes(uint8_t driver_Addr, uint8_t start_Addr, uint8_t number_Bytes, uint8_t *read_Buffer){
-    
-  // Wire1.beginTransmission(driver_Addr);
-  // Wire1.write(start_Addr);  
-  // Wire1.endTransmission(false);
-  // uint8_t i = 0;
-  // Wire1.requestFrom(driver_Addr,number_Bytes);
-  
-  // //! Put read results in the Rx buffer
-  // while (Wire1.available()) {
-  //   read_Buffer[i++] = Wire1.read();
-  // }        
+void MPU6886::I2C_Read_NBytes(uint8_t driver_Addr, uint8_t start_Addr, uint8_t number_Bytes, uint8_t *read_Buffer)
+{
   m_port.readBytes(driver_Addr, start_Addr, number_Bytes, read_Buffer);
-
 }
 
-void MPU6886::I2C_Write_NBytes(uint8_t driver_Addr, uint8_t start_Addr, uint8_t number_Bytes, uint8_t *write_Buffer){
-
-  // Wire1.beginTransmission(driver_Addr);
-  // Wire1.write(start_Addr);
-  // Wire1.write(*write_Buffer);
-  // Wire1.endTransmission();
+void MPU6886::I2C_Write_NBytes(uint8_t driver_Addr, uint8_t start_Addr, uint8_t number_Bytes, uint8_t *write_Buffer)
+{
   m_port.writeBytes(driver_Addr, start_Addr, number_Bytes, write_Buffer);
 }
 
-int MPU6886::initialize(void){
+int MPU6886::initialize(void)
+{
   unsigned char tempdata[1];
   unsigned char regdata;
   
@@ -48,67 +30,68 @@ int MPU6886::initialize(void){
   I2C_Read_NBytes(MPU6886_ADDRESS, MPU6886_WHOAMI, 1, tempdata);
   if(tempdata[0] != 0x19)
     return -1;
-  mpu_delay(1);
+  delay(1);
   
   regdata = 0x00;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_PWR_MGMT_1, 1, &regdata);
-  mpu_delay(10);
+  delay(10);
 
   //PWR1_DEVICE_RESET_BIT
   regdata = (0x01<<7);
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_PWR_MGMT_1, 1, &regdata);
-  mpu_delay(10);
+  delay(10);
 
   regdata = (0x01<<0);
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_PWR_MGMT_1, 1, &regdata);
-  mpu_delay(10);
+  delay(10);
 
   regdata = 0x10;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_ACCEL_CONFIG, 1, &regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x18;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_GYRO_CONFIG, 1, &regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x01;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_CONFIG, 1, &regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x05;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_SMPLRT_DIV, 1,&regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x00;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_INT_ENABLE, 1, &regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x00;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_ACCEL_CONFIG2, 1, &regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x00;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_USER_CTRL, 1, &regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x00;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_FIFO_EN, 1, &regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x22;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_INT_PIN_CFG, 1, &regdata);
-  mpu_delay(1);
+  delay(1);
 
   regdata = 0x01;
   I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_INT_ENABLE, 1, &regdata);
 
-  mpu_delay(100);
+  delay(100);
   getGres();
   getAres();
   return 0;
 }
 
-void MPU6886::accelerationRaw(int16_t* ax, int16_t* ay, int16_t* az){
+void MPU6886::accelerationRaw(int16_t* ax, int16_t* ay, int16_t* az)
+{
 
    uint8_t buf[6];  
    I2C_Read_NBytes(MPU6886_ADDRESS,MPU6886_ACCEL_XOUT_H,6,buf);
@@ -118,7 +101,9 @@ void MPU6886::accelerationRaw(int16_t* ax, int16_t* ay, int16_t* az){
    *az=((int16_t)buf[4]<<8)|buf[5];
 
 }
-void MPU6886::rotationRaw(int16_t* gx, int16_t* gy, int16_t* gz){
+
+void MPU6886::rotationRaw(int16_t* gx, int16_t* gy, int16_t* gz)
+{
 
   uint8_t buf[6];
   I2C_Read_NBytes(MPU6886_ADDRESS,MPU6886_GYRO_XOUT_H,6,buf);
@@ -129,7 +114,8 @@ void MPU6886::rotationRaw(int16_t* gx, int16_t* gy, int16_t* gz){
   
 }
 
-void MPU6886::temperatureRaw(int16_t *t){
+void MPU6886::temperatureRaw(int16_t *t)
+{
   
   uint8_t buf[2];  
   I2C_Read_NBytes(MPU6886_ADDRESS,MPU6886_TEMP_OUT_H,2,buf);
@@ -156,7 +142,8 @@ void MPU6886::getAhrsData(float *pitch,float *roll,float *yaw)
   MahonyAHRSupdateIMU(gyroX * DEG_TO_RAD, gyroY * DEG_TO_RAD, gyroZ * DEG_TO_RAD, accX, accY, accZ,pitch,roll,yaw);
 }
 
-void MPU6886::getGres(){
+void MPU6886::getGres()
+{
 
    switch (Gyscale)
    {
@@ -178,7 +165,8 @@ void MPU6886::getGres(){
 }
 
 
-void MPU6886::getAres(){
+void MPU6886::getAres()
+{
    switch (Acscale)
    {
    // Possible accelerometer scales (and their register bit settings) are:
@@ -206,7 +194,7 @@ void MPU6886::setGyroFullScale(Gscale scale)
     unsigned char regdata;	
     regdata = (scale<<3);
     I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_GYRO_CONFIG, 1, &regdata);
-    mpu_delay(10);
+    delay(10);
 
     Gyscale = scale;
     getGres();
@@ -217,7 +205,7 @@ void MPU6886::setAccelFullScale(Ascale scale)
     unsigned char regdata;	
     regdata = (scale<<3);
     I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_ACCEL_CONFIG, 1, &regdata);
-    mpu_delay(10);
+    delay(10);
 
     Acscale = scale;
     getAres();
@@ -226,8 +214,8 @@ void MPU6886::setAccelFullScale(Ascale scale)
 
 
 
-void MPU6886::acceleration(float* ax, float* ay, float* az){
-
+void MPU6886::acceleration(float* ax, float* ay, float* az)
+{
 
   int16_t accX = 0;
   int16_t accY = 0;
@@ -241,7 +229,8 @@ void MPU6886::acceleration(float* ax, float* ay, float* az){
 
 }
       
-void MPU6886::rotation(float* gx, float* gy, float* gz){
+void MPU6886::rotation(float* gx, float* gy, float* gz)
+{
   int16_t gyroX = 0;
   int16_t gyroY = 0;
   int16_t gyroZ = 0;
@@ -252,7 +241,8 @@ void MPU6886::rotation(float* gx, float* gy, float* gz){
   *gz = (float)gyroZ * gRes;
 }
 
-void MPU6886::temperatureC(float *t){
+void MPU6886::temperatureC(float *t)
+{
   
   int16_t temp = 0;
   temperatureRaw(&temp);

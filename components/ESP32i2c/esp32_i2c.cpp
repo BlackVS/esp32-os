@@ -2,6 +2,7 @@
 #include "freertos/task.h"
 #include "driver/gpio.h"
 //#include "driver/spi_master.h"
+#include "esp32_tools.h"
 #include "esp32_tft_common.h"
 #include "esp32_tft_constants.h"
 #include "esp_log.h"
@@ -37,11 +38,11 @@ esp_err_t ESP32_I2Cdevice::reset(unsigned int delayMs)
     {
         gpio_set_direction( m_pin_reset, GPIO_MODE_OUTPUT );
         gpio_set_level(m_pin_reset, 1);
-        tft_delay(10);
+        delay(10);
         gpio_set_level(m_pin_reset, 0);
-        tft_delay(10);
+        delay(10);
         gpio_set_level(m_pin_reset, 1);
-        tft_delay(delayMs);
+        delay(delayMs);
     }
     return ESP_OK;
 }

@@ -11,7 +11,7 @@ elseif(CONFIG_ESP32_BOARD_TTGO)
  set(COMPONENT_SRCDIRS . hardware console resources ./boards/ttgo)
 endif()
 
-set( COMPONENT_ADD_LDFLAGS+= -z muldefs)
+#set( COMPONENT_ADD_LDFLAGS+= -z muldefs)
 
 #set(COMPONENT_PRIV_INCLUDEDIRS proto-c)
 #set(COMPONENT_PRIV_REQUIRES protobuf-c)

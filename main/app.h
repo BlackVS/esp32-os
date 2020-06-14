@@ -61,9 +61,10 @@ extern "C" {
 
 //boards
 #include "boards.h"
+#include "board_tools.h"
 
-//
-#include "utils.h"
+//common tools
+#include "esp32_tools.h"
 
 //general for all boards tasks
 #include "console.h"

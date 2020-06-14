@@ -31,6 +31,7 @@
 
 #include "tiler.h"
 #include "canvas/canvas.h"
+#include "esp32_tools.h"
 
 /**
  * @ingroup NANO_ENGINE_API_V2
@@ -272,9 +273,9 @@ NanoEngine<C,D>::NanoEngine( D & display)
 template<class C, class D>
 void NanoEngine<C,D>::display()
 {
-    m_lastFrameTs = lcd_millis();
+    m_lastFrameTs = millis();
     NanoEngineTiler<C,D>::displayBuffer();
-    m_cpuLoad = ((lcd_millis() - m_lastFrameTs)*100)/m_frameDurationMs;
+    m_cpuLoad = ((millis() - m_lastFrameTs)*100)/m_frameDurationMs;
 }
 
 template<class C, class D>
@@ -287,8 +288,8 @@ template<class C, class D>
 void NanoEngine<C,D>::notify(const char *str)
 {
     NanoEngineTiler<C,D>::displayPopup(str);
-    lcd_delay(1000);
-    m_lastFrameTs = lcd_millis();
+    delay(1000);
+    m_lastFrameTs = millis();
     NanoEngineTiler<C,D>::refresh();
 }
 

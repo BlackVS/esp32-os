@@ -1,7 +1,6 @@
 #include "app.h"
 
 #include "board_nnc2019.h"
-#define randrange(a,b) lcd_random(a,b) 
 
 typedef struct {
   uint32_t r1, g1, b1, pos1, dir1;
