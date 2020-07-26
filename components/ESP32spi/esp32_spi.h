@@ -7,7 +7,7 @@
 
 #define SPIHOST2STR(h) (((h)==VSPI_HOST)?"VSPI_HOST":(((h)==HSPI_HOST)?"HSPI_HOST":"SPI_HOST" ))
 
-//Full screemn - fastest
+//Full screen - fastest
 #define SPI_DATA_BUF_SIZE 80*160*2
 
 ////////////////////////////////////////////////////////////

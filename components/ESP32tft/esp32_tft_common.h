@@ -9,7 +9,8 @@ typedef enum {
     TFT_ST7735_128x128x16,
     TFT_ST7735_128x160x16,
     TFT_ST7735_M5STICKC,
-    TFT_SSD1306_128x64x1
+    TFT_SSD1306_128x64x1,
+    TFT_SH1106_128x64x1
 } TFT_TYPE;
  
 typedef enum {

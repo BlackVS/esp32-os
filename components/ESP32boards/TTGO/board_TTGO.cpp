@@ -37,11 +37,12 @@ Board_TTGO board=Board_TTGO();
 //                        Bus       MOSI/SDA     MISO         CLK/SCL
 
 // SPI bus - little bit different from M5STICKC to enable JTAG - 13,15 -> 19,22
-ESP32_SPIbus 	spiBus(HSPI_HOST, GPIO_NUM_22, GPIO_NUM_NC, GPIO_NUM_19); //+ JTAG
+ESP32_SPIbus 	spiBus(HSPI_HOST, GPIO_NUM_22, GPIO_NUM_NC, GPIO_NUM_19); //+ JTAG  
 //                        Bus      MOSI/SDA     MISO         CLK/SCL
 
 // Control pins for TFT - reset, select, data control
 ESP32_SPIdevice spiDevice(spiBus, GPIO_NUM_18, GPIO_NUM_5, GPIO_NUM_23, 27000000);
+//ESP32_SPIdevice spiDevice(spiBus, GPIO_NUM_18, GPIO_NUM_5, GPIO_NUM_23, 4000000);
 //                                   Reset        CS           DC
 
 // Initialize 80*160*16 TFT 
@@ -69,10 +70,13 @@ void Board_TTGO::init()
 
     //Display init
     ESP_LOGD(__FUNCTION__, "Starting...");
-    display.begin(); // will raise error on i2c init - it is normal
 
+    // spiTFT.begin();
+    // spiTFT.test();
+    delay(2000);
 
     //Test
+    display.begin(); // will raise error on i2c init - it is normal
     display.setFixedFont(ssd1306xled_font6x8);
     //display.setFreeFont( free_calibri11x12, free_calibri11x12_cyrillic );
 

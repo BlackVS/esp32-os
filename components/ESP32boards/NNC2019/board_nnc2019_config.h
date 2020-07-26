@@ -21,11 +21,13 @@ namespace NNC2019 {
         //i2c0
         constexpr gpio_num_t    IIC0_SCL_PIN = GPIO_NUM_16;
         constexpr gpio_num_t    IIC0_SDA_PIN = GPIO_NUM_17;
+        //constexpr uint32_t      IIC0_FREQ    = 400000; //100000 or 400000
         constexpr uint32_t      IIC0_FREQ    = 400000; //100000 or 400000
 
         //display SSD1306
         //uses i2c0
-        constexpr uint32_t      OLED_I2C_ADDR=0x3c;
+        constexpr uint32_t      OLED_SSD1306_I2C_ADDR=0x3c;
+        //constexpr uint32_t      OLED_SSH1106_I2C_ADDR=0x3c;
 
         //mpu
         //uses i2c0

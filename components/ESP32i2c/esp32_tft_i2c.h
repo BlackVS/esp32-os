@@ -10,11 +10,14 @@
 
 class ESP32_I2C_TFT : public NanoDisplayInterface
 {
-        ESP32_I2Cdevice&  m_device;
-        unsigned int    m_width  = {0};
-        unsigned int    m_height = {0};
-        TFT_TYPE m_display_type={TFT_UNKNOWN};
+        ESP32_I2Cdevice&    m_device;
+        unsigned int        m_width  = {0};
+        unsigned int        m_height = {0};
+        TFT_TYPE            m_display_type={TFT_UNKNOWN};
         ESP32_TFT_Notifications*    m_base={NULL};
+
+        unsigned int m_block_y = {0}; //used in ssh1106 block operations
+        unsigned int m_block_x = {0};
 
     public:
         ESP32_I2C_TFT(ESP32_I2Cdevice& device, unsigned int width, unsigned int height, TFT_TYPE display_type=TFT_AUTO);

@@ -20,6 +20,8 @@ class ESP32_SPI_TFT : public NanoDisplayInterface
         TFT_ROTATION m_display_rotation={TFT_ROTATION_DEFAULT};
         TFT_TYPE m_display_type = {TFT_AUTO};
 
+        unsigned int m_block_y = {0}; //used in ssh1106 block operations
+        unsigned int m_block_x = {0};
 
     public:
         ESP32_SPI_TFT(ESP32_SPIdevice& dev, 
@@ -43,7 +45,7 @@ class ESP32_SPI_TFT : public NanoDisplayInterface
         void start() override {};
         void stop() override  {};
         void sendBuffer(const uint8_t *buffer, uint16_t size) override  {};
-        void nextBlock() override  {};
+        void nextBlock() override;
 
     //ESP32_TFT_Notifications
     public:
@@ -57,6 +59,12 @@ class ESP32_SPI_TFT : public NanoDisplayInterface
     public: //properties
         unsigned int width()  { return m_width; }
         unsigned int height() { return m_height; }
+
+        void test();
+        void SH1106_pixel(int x, int y, char color, uint8_t* buffer);
+        void SH1106_bitmap(uint8_t x, uint8_t y, const uint8_t *pBmp, uint8_t chWidth, uint8_t chHeight, uint8_t* buffer);
+        void SH1106_display(uint8_t* buffer);
+        void SH1106_clear(uint8_t* buffer);
 };
 
 

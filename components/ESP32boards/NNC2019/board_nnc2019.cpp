@@ -15,8 +15,10 @@ Board_NNC2019 board=Board_NNC2019();
 I2C_t i2c0 = i2cbus::I2C(I2C_NUM_0, NNC2019::config::IIC0_SDA_PIN, NNC2019::config::IIC0_SCL_PIN, NNC2019::config::IIC0_FREQ);
 
 //Attached OLED at i2c0
-ESP32_I2Cdevice i2c_disp(i2c0, NNC2019::config::OLED_I2C_ADDR);
+ESP32_I2Cdevice i2c_disp(i2c0, NNC2019::config::OLED_SSD1306_I2C_ADDR);
 ESP32_I2C_TFT   i2cTFT(i2c_disp, 128, 64, TFT_SSD1306_128x64x1);
+//ESP32_I2Cdevice i2c_disp(i2c0, NNC2019::config::OLED_SSH1106_I2C_ADDR);
+//ESP32_I2C_TFT   i2cTFT(i2c_disp, 128, 64, TFT_SH1106_128x64x1);
 
 //Attached MPU at i2c0
 MPU_t MPU(i2c0, NNC2019::config::MPU_I2C_ADDR);
@@ -43,6 +45,7 @@ void Board_NNC2019::init()
 {
     // Initialize I2C on port 0 using I2Cbus interface
     i2c0.begin();
+    i2c0.scanner();
     //
     WiFi.init();
     mpu_init(MPU);
