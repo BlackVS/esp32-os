@@ -26,7 +26,8 @@ extern "C" {
 #endif
 
 #include "esp_wifi.h"
-#include "esp_event_loop.h"
+#include "esp_event.h"
+//#include "esp_event_loop.h"
 #include "esp_sntp.h"
 
 //#include "lwip/apps/sntp.h"

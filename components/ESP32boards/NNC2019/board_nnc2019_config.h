@@ -3,7 +3,7 @@
 #include <driver/rmt.h>
 #include <driver/touch_pad.h>
 
-//#define NNC2019_JTAG_ENABLED 1
+#define NNC2019_JTAG_ENABLED 1
 
 namespace NNC2019 {
     namespace config{
@@ -17,6 +17,7 @@ namespace NNC2019 {
 
         //touchpad
         constexpr touch_pad_t   PIN_TOUCH=TOUCH_PAD_NUM5;  /*!< Touch pad channel 5 is GPIO12*/
+        //constexpr touch_pad_t   PIN_TOUCH=TOUCH_PAD_NUM9;  /*!< Touch pad channel 5 is GPIO12*/
 
         //i2c0
         constexpr gpio_num_t    IIC0_SCL_PIN = GPIO_NUM_16;

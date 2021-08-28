@@ -75,8 +75,10 @@ esp_err_t touchpad_proces(touch_pad_t pin)
     bool&     last_long_was       = _touch_buttons[pin].last_long_was;
     TOUCHPAD_STATE& tp_last_state = _touch_buttons[pin].tp_last_state;
 
-
+    //DEBUG!!!!
     res=touch_pad_read_filtered(pin, &touch_filter_value);
+    //res=touch_pad_read_filtered(TOUCH_PAD_NUM9, &touch_filter_value);
+    
     if(res!=ESP_OK){
       ESP_LOGE(TAG, "%s\n", esp_err_to_name(res));
       return res;
@@ -185,6 +187,9 @@ void CTouchButton::init()
   //    touch_pad_config(i, TOUCH_THRESH_NO_USE);
   //}
   touch_pad_config(m_channel, TOUCHPAD_THRESH_NO_USE);
+  //DEBUG!!!!
+  //touch_pad_config(TOUCH_PAD_NUM9, TOUCHPAD_THRESH_NO_USE);
+  
   _touch_buttons[m_channel].tp_last_state=TOUCHPAD_STATE_OFF;
   _touch_buttons[m_channel].is_enabled=true;
   touchpad_enabled=true;

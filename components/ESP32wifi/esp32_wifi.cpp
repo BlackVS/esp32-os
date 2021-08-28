@@ -302,15 +302,15 @@ esp_err_t CWiFi::set_mode(WiFi_MODES m, wifi_bandwidth_t bandwidth, wifi_config_
         return ESP_ERR_INVALID_ARG;
       }
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_AP));
-      ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_AP, cfg));
-      ESP_ERROR_CHECK(esp_wifi_set_bandwidth(ESP_IF_WIFI_AP, bandwidth));
+      ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_AP, cfg));
+      ESP_ERROR_CHECK(esp_wifi_set_bandwidth(WIFI_IF_AP, bandwidth));
       ESP_ERROR_CHECK(esp_wifi_start());
       mode=m;
       break;
     case WiFi_MODE_STA:
       ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
       if(cfg) {
-        ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, cfg));
+        ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, cfg));
       }
       ESP_ERROR_CHECK(esp_wifi_start());
       mode=m;
