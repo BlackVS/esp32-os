@@ -1,5 +1,6 @@
 # VS Code Settings
 # .vscode/
+.vscode/*.log
 
 # Results for the checking of the Python coding style
 flake8_output.txt
